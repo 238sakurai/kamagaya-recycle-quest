@@ -60,6 +60,20 @@ export function RoomScene({ room, marked, result, onTap, animate }: RoomScenePro
             <g transform={`translate(${-60 * scale} ${-60 * scale}) scale(${scale})`}>
               <ItemShape art={o.art} />
             </g>
+            <text
+              y={60 * scale + 13}
+              textAnchor="middle"
+              fontSize={o.label.length >= 8 ? 10 : 11.5}
+              fontWeight="700"
+              fill={BROWN}
+              stroke="#FFFDF7"
+              strokeWidth="3.5"
+              strokeLinejoin="round"
+              style={{ paintOrder: 'stroke' }}
+              aria-hidden="true"
+            >
+              {o.label}
+            </text>
             {isMarked && !judging ? (
               <ellipse
                 rx="36"

@@ -27,6 +27,14 @@ describe('おへやで有価物さがしの部屋データ', () => {
         }
       })
 
+      it('各オブジェクトに9文字以内のラベルがあり、漢字を含まない', () => {
+        for (const o of room.objects) {
+          expect(o.label.length).toBeGreaterThan(0)
+          expect(o.label.length).toBeLessThanOrEqual(9)
+          expect(o.label).not.toMatch(/[\u4e00-\u9faf]/)
+        }
+      })
+
       it('有価物と対象外が両方あり、有価物は3つ以上', () => {
         expect(room.objects.filter((o) => o.accepted).length).toBeGreaterThanOrEqual(3)
         expect(room.objects.filter((o) => !o.accepted).length).toBeGreaterThanOrEqual(3)
