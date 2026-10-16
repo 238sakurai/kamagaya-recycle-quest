@@ -67,12 +67,16 @@ function Art({ art }: { art: string }) {
           <Face x={60} y={70} />
         </g>
       )
-    case 'blanket':
+    case 'electric-blanket':
       return (
         <g>
-          <rect x="20" y="34" width="80" height="56" rx="12" fill="#B8E4FF" stroke={BROWN} strokeWidth="3" />
-          <path d="M20 50 H100 M20 66 H100" stroke="#FFFDF7" strokeWidth="6" />
-          <Face x={60} y={60} />
+          <rect x="20" y="30" width="80" height="56" rx="12" fill="#B8E4FF" stroke={BROWN} strokeWidth="3" />
+          <path d="M20 46 H100 M20 62 H100" stroke="#FFFDF7" strokeWidth="6" />
+          <rect x="44" y="76" width="32" height="12" rx="4" fill="#DDD" stroke={BROWN} strokeWidth="2" />
+          <path d="M60 88 q0 12 12 12 h10" stroke={BROWN} strokeWidth="3" fill="none" strokeLinecap="round" />
+          <rect x="82" y="94" width="14" height="12" rx="3" fill="#FFD85A" stroke={BROWN} strokeWidth="2" />
+          <path d="M96 97 h6 M96 103 h6" stroke={BROWN} strokeWidth="2.5" strokeLinecap="round" />
+          <Face x={60} y={56} />
         </g>
       )
     case 'can':

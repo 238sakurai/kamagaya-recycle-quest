@@ -54,6 +54,12 @@ describe('ステージ1の出題データ', () => {
     }
   })
 
+  it('各品目が種類（category）を持ち、どの種類も全体の半分以下（連続を避けられる）', () => {
+    const counts = new Map<string, number>()
+    for (const item of SORT_ITEMS) counts.set(item.category, (counts.get(item.category) ?? 0) + 1)
+    for (const n of counts.values()) expect(n).toBeLessThanOrEqual(Math.ceil(SORT_ITEMS.length / 2))
+  })
+
   it('id が重複しない', () => {
     const ids = SORT_ITEMS.map((i) => i.id)
     expect(new Set(ids).size).toBe(ids.length)

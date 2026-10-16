@@ -34,4 +34,4 @@ export const REWARDS: Reward[] = [
   },
 ]
 
-export const MAX_POINTS = 220
+export const MAX_POINTS = 210

@@ -52,6 +52,26 @@ describe('App', () => {
     expect(plainText(screen.getByTestId('feedback-correct'))).toContain(stripFurigana(item.explanation))
   })
 
+  it('準備が必要な品目は、同じ品目のままステップ2（出し方）に進む', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByTestId('start'))
+    // 準備が必要な品目が出るまで進める
+    for (let i = 0; i < SORT_ITEMS.length; i++) {
+      const itemId = screen.getByTestId('item-name').dataset.itemId!
+      const item = SORT_ITEMS.find((it) => it.id === itemId)!
+      expect(plainText(screen.getByTestId('step-badge'))).toContain('ステップ1')
+      await clickOption(user, item.verdict)
+      await user.click(screen.getByTestId('feedback-correct').querySelector('button')!)
+      if (item.verdict === 'prep') {
+        expect(screen.getByTestId('item-name').dataset.itemId).toBe(itemId)
+        expect(plainText(screen.getByTestId('step-badge'))).toContain('ステップ2')
+        return
+      }
+    }
+    throw new Error('準備が必要な品目が出題されなかった')
+  })
+
   it('不正解でも再挑戦できる', async () => {
     const user = userEvent.setup()
     render(<App />)

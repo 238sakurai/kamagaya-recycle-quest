@@ -9,7 +9,7 @@ import { Screen } from '../components/Screen'
 import { SORT_ITEMS, type SortItem, type Verdict } from '../data/items'
 import { MAX_POINTS } from '../data/rewards'
 import { pointsForAnswer } from '../lib/score'
-import { shuffle } from '../lib/shuffle'
+import { shuffleNoAdjacent } from '../lib/shuffle'
 import type { SoundName } from '../lib/sound'
 
 interface Stage1Props {
@@ -46,7 +46,8 @@ interface AnswerState {
 const EMPTY: AnswerState = { attempts: 0, wrongIds: [], lastCorrect: false, gained: 0 }
 
 export function Stage1Sort({ points, onGain, onComplete, playSound, onCelebrate }: Stage1Props) {
-  const items = useMemo(() => shuffle(SORT_ITEMS), [])
+  // 同じ種類（紙類・布類・缶・ビン）の品目が続けて出ないように並べる
+  const items = useMemo(() => shuffleNoAdjacent(SORT_ITEMS, (i) => i.category), [])
   const [index, setIndex] = useState(0)
   const [phase, setPhase] = useState<Phase>('verdict')
   const [verdictState, setVerdictState] = useState<AnswerState>(EMPTY)
@@ -126,6 +127,7 @@ export function Stage1Sort({ points, onGain, onComplete, playSound, onCelebrate 
   }
 
   const lastWrongVerdict = verdictState.wrongIds[verdictState.wrongIds.length - 1] as VerdictChoice | undefined
+  const isPrepStep = phase === 'prep' || phase === 'prep-feedback'
 
   return (
     <Screen
@@ -144,11 +146,22 @@ export function Stage1Sort({ points, onGain, onComplete, playSound, onCelebrate 
         </div>
       }
     >
-      <Card className={`flex flex-col items-center gap-2 ${shake ? 'animate-wiggle' : ''}`} tone="sky">
+      <Card className={`relative flex flex-col items-center gap-2 ${shake ? 'animate-wiggle' : ''}`} tone={isPrepStep ? 'yellow' : 'sky'}>
+        <span
+          data-testid="step-badge"
+          className={`absolute left-3 top-3 rounded-full px-3 py-1 text-xs font-black ${isPrepStep ? 'bg-eco-yellow-dark text-white' : 'bg-white text-eco-brown'}`}
+        >
+          <Ruby text={isPrepStep ? 'ステップ2：出[だ]し方[かた]' : 'ステップ1：出[だ]せる？'} />
+        </span>
         <ItemArt art={item.art} className="size-36" />
         <p className="text-3xl font-black" data-testid="item-name" data-item-id={item.id}>
           <Ruby text={item.name} />
         </p>
+        {isPrepStep ? (
+          <p className="rounded-full bg-white/80 px-3 py-1 text-sm font-bold text-eco-green-dark">
+            <Ruby text="⭕ 出[だ]せる → つぎは出[だ]し方[かた]！" />
+          </p>
+        ) : null}
       </Card>
 
       {phase === 'verdict' ? (
@@ -168,7 +181,7 @@ export function Stage1Sort({ points, onGain, onComplete, playSound, onCelebrate 
             extra={item.verdict === 'no' ? item.instead : undefined}
             gained={verdictState.gained}
             onNext={afterVerdictFeedback}
-            nextLabel={item.verdict === 'prep' ? '出[だ]し方[かた]クイズへ ▶' : 'つぎへ ▶'}
+            nextLabel={item.verdict === 'prep' ? 'ステップ2：出[だ]し方[かた]へ ▶' : 'つぎの品目[ひんもく]へ ▶'}
           />
         ) : (
           <Feedback kind="wrong" message={VERDICT_HINT[lastWrongVerdict ?? 'asis']} onNext={afterVerdictFeedback} />
@@ -186,7 +199,7 @@ export function Stage1Sort({ points, onGain, onComplete, playSound, onCelebrate 
 
       {phase === 'prep-feedback' && item.prep ? (
         prepState.lastCorrect ? (
-          <Feedback kind="correct" message={item.explanation} gained={prepState.gained} onNext={afterPrepFeedback} />
+          <Feedback kind="correct" message={item.explanation} gained={prepState.gained} onNext={afterPrepFeedback} nextLabel="つぎの品目[ひんもく]へ ▶" />
         ) : (
           <Feedback kind="wrong" message="そのやり方[かた]だと回収[かいしゅう]してもらえないかも。公式[こうしき]のルールを思[おも]い出[だ]してみよう！" onNext={afterPrepFeedback} />
         )

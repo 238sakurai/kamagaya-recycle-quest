@@ -18,10 +18,14 @@ export interface PrepOption {
   label: string
 }
 
+/** 出題の並びで同じ種類が連続しないようにするためのグループ */
+export type ItemCategory = 'paper' | 'cloth' | 'can' | 'bottle'
+
 export interface SortItem {
   id: string
   /** ふりがな記法: 漢字[よみ] */
   name: string
+  category: ItemCategory
   /** イラストの種類（Illustration コンポーネントが解釈） */
   art: string
   verdict: Verdict
@@ -41,6 +45,7 @@ export interface SortItem {
 export const SORT_ITEMS: SortItem[] = [
   {
     id: 'newspaper',
+    category: 'paper',
     name: '新聞[しんぶん]',
     art: 'newspaper',
     verdict: 'prep',
@@ -59,6 +64,7 @@ export const SORT_ITEMS: SortItem[] = [
   },
   {
     id: 'magazine',
+    category: 'paper',
     name: '雑誌[ざっし]',
     art: 'magazine',
     verdict: 'prep',
@@ -77,6 +83,7 @@ export const SORT_ITEMS: SortItem[] = [
   },
   {
     id: 'cardboard',
+    category: 'paper',
     name: 'ダンボール',
     art: 'cardboard',
     verdict: 'prep',
@@ -95,6 +102,7 @@ export const SORT_ITEMS: SortItem[] = [
   },
   {
     id: 'clothes',
+    category: 'cloth',
     name: '古着[ふるぎ]',
     art: 'clothes',
     verdict: 'prep',
@@ -113,6 +121,7 @@ export const SORT_ITEMS: SortItem[] = [
   },
   {
     id: 'can',
+    category: 'can',
     name: '空[あ]き缶[かん]',
     art: 'can',
     verdict: 'prep',
@@ -131,6 +140,7 @@ export const SORT_ITEMS: SortItem[] = [
   },
   {
     id: 'bottle',
+    category: 'bottle',
     name: '空[あ]きビン',
     art: 'bottle',
     verdict: 'prep',
@@ -148,25 +158,20 @@ export const SORT_ITEMS: SortItem[] = [
     sources: ['yukabutu'],
   },
   {
-    id: 'blanket',
-    name: '毛布[もうふ]',
-    art: 'blanket',
-    verdict: 'prep',
+    id: 'electric-blanket',
+    category: 'cloth',
+    name: '電気毛布[でんきもうふ]',
+    art: 'electric-blanket',
+    verdict: 'no',
     explanation:
-      '毛布[もうふ]もボロ布[ぬの]として出[だ]せるよ。ぬれないようにポリ袋[ぶくろ]に入[い]れよう。電気毛布[でんきもうふ]やキルティングの物[もの]は出[だ]せないので注意[ちゅうい]！',
-    prep: {
-      question: '毛布[もうふ]は、どうやって出[だ]す？',
-      options: [
-        { id: 'bag', label: 'ぬれないようにポリ袋[ぶくろ]に入[い]れる' },
-        { id: 'fold', label: 'たたんで地面[じめん]に置[お]く' },
-        { id: 'cut', label: '小[ちい]さく切[き]る' },
-      ],
-      correctId: 'bag',
-    },
-    sources: ['yukabutu'],
+      '電気毛布[でんきもうふ]は、ふつうの毛布[もうふ]とちがって有価物回収[ゆうかぶつかいしゅう]には出[だ]せないよ。キルティングの物[もの]や合成皮革[ごうせいひかく]、枕[まくら]も出[だ]せないんだ。',
+    instead:
+      'ふつうの毛布[もうふ]やシーツ、カーテンは「ボロ布[ぬの]」として出[だ]せるよ。電気毛布[でんきもうふ]の出[だ]し方[かた]は、おうちの人[ひと]と市[し]のごみ分別一覧表[ぶんべついちらんひょう]で確認[かくにん]してね。',
+    sources: ['yukabutu', 'gomi'],
   },
   {
     id: 'spray',
+    category: 'can',
     name: 'スプレー缶[かん]',
     art: 'spray',
     verdict: 'no',
@@ -178,6 +183,7 @@ export const SORT_ITEMS: SortItem[] = [
   },
   {
     id: 'broken-bottle',
+    category: 'bottle',
     name: '割[わ]れたビン',
     art: 'broken-bottle',
     verdict: 'no',
@@ -189,6 +195,7 @@ export const SORT_ITEMS: SortItem[] = [
   },
   {
     id: 'cosmetic-bottle',
+    category: 'bottle',
     name: '化粧[けしょう]ビン',
     art: 'cosmetic',
     verdict: 'no',
