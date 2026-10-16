@@ -60,6 +60,14 @@ npm run e2e        # Playwright（ビルド後に preview で実行。Pixel 7 / 
 
 Vite / React / TypeScript / Tailwind CSS v4 / インラインSVG / localStorage / Vitest / Playwright / GitHub Actions
 
+### リンク共有用の画像（OGP）
+
+```bash
+npm run og:image   # public/og-image.png（1200×630）を生成
+```
+
+SNS やチャットでリンクを共有したときに表示されるアイキャッチ画像です。ゲームと同じ SVG（リサ丸・資源・黄色い旗）を Playwright の Chromium で描画します。文字はシステムフォント（ヒラギノ丸ゴ）で描くため macOS で生成します。公開 URL を変えたときは `index.html` の `og:url` / `og:image` も書き換えてください。
+
 ### 公開
 
 `main` ブランチへの push で GitHub Actions が GitHub Pages にデプロイします（`.github/workflows/deploy.yml`）。

@@ -116,11 +116,7 @@ export function SourcesScreen({ onBack, onClearData }: SourcesScreenProps) {
       </Section>
 
       <Section title="ライセンス">
-        <p>
-          アプリ本体は MIT License です。イラスト・効果音はすべて自作で、外部素材は使用していません。出典と利用条件の一覧は
-          <ExternalLink href="https://github.com/238sakurai/kamagaya-recycle-quest/blob/main/NOTICE.md">NOTICE.md</ExternalLink>
-          を参照してください。
-        </p>
+        <p>アプリ本体は MIT License です。イラスト・効果音はすべて自作で、外部の素材は使用していません。出典と利用条件の一覧は、配布物に同梱の NOTICE.md に記載しています。</p>
       </Section>
 
       <Button onClick={onBack} label="◀ もどる" data-testid="back" />
