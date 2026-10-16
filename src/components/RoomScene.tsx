@@ -27,7 +27,7 @@ export function RoomScene({ room, marked, result, onTap, animate }: RoomScenePro
 
   return (
     <svg viewBox={`0 0 ${ROOM_WIDTH} ${ROOM_HEIGHT}`} className="w-full rounded-blob ring-4 ring-white" role="group" aria-label={`${stripFurigana(room.name)}のイラスト`} data-testid="room-scene">
-      {room.scene === 'kids' ? <KidsRoom /> : <LivingRoom />}
+      {room.scene === 'kids' ? <KidsRoom /> : room.scene === 'living' ? <LivingRoom /> : room.scene === 'entrance' ? <Entrance /> : <Storage />}
 
       {room.objects.map((o) => {
         const scale = o.scale ?? 0.55
@@ -142,6 +142,50 @@ function LivingRoom() {
       <rect x="244" y="326" width="112" height="22" rx="8" fill="#3EA973" stroke={BROWN} strokeWidth="3" />
       {/* ラグ */}
       <ellipse cx="150" cy="340" rx="90" ry="30" fill="#FFD85A" opacity="0.5" />
+    </g>
+  )
+}
+
+function Entrance() {
+  return (
+    <g aria-hidden="true">
+      <rect width={ROOM_WIDTH} height="250" fill="#F3E9D8" />
+      <rect y="250" width={ROOM_WIDTH} height={ROOM_HEIGHT - 250} fill="#C9C0B2" />
+      {[0, 60, 120, 180, 240, 300].map((x) => (
+        <path key={x} d={`M${x} 250 V${ROOM_HEIGHT}`} stroke="#B8B0A6" strokeWidth="2" />
+      ))}
+      {[310, 370, 430].map((y) => (
+        <path key={y} d={`M0 ${y} H${ROOM_WIDTH}`} stroke="#B8B0A6" strokeWidth="2" />
+      ))}
+      {/* ドア */}
+      <rect x="130" y="20" width="110" height="230" rx="4" fill="#C99A5B" stroke={BROWN} strokeWidth="3" />
+      <rect x="146" y="40" width="78" height="80" rx="3" fill="#B8E4FF" stroke={BROWN} strokeWidth="2" />
+      <circle cx="226" cy="150" r="5" fill="#FFD85A" stroke={BROWN} strokeWidth="2" />
+      {/* 靴箱 */}
+      <rect x="20" y="90" width="90" height="90" rx="4" fill="#E0B87A" stroke={BROWN} strokeWidth="3" />
+      <path d="M20 120 H110 M20 150 H110" stroke={BROWN} strokeWidth="2" />
+      {/* 玄関マット */}
+      <rect x="130" y="262" width="120" height="40" rx="6" fill="#58C78E" opacity="0.7" />
+    </g>
+  )
+}
+
+function Storage() {
+  return (
+    <g aria-hidden="true">
+      <rect width={ROOM_WIDTH} height="250" fill="#D9C2A0" />
+      {[40, 80, 120, 160, 200, 240].map((y) => (
+        <path key={y} d={`M0 ${y} H${ROOM_WIDTH}`} stroke="#C9A97F" strokeWidth="3" />
+      ))}
+      <rect y="250" width={ROOM_WIDTH} height={ROOM_HEIGHT - 250} fill="#A8A29A" />
+      {/* 棚板 */}
+      <rect x="160" y="96" width="190" height="8" rx="3" fill="#8C6B45" stroke={BROWN} strokeWidth="2" />
+      <rect x="160" y="196" width="190" height="8" rx="3" fill="#8C6B45" stroke={BROWN} strokeWidth="2" />
+      {/* 小窓 */}
+      <rect x="40" y="30" width="80" height="50" rx="4" fill="#B8E4FF" stroke={BROWN} strokeWidth="3" />
+      <path d="M80 30 V80" stroke={BROWN} strokeWidth="2" />
+      {/* 工具 */}
+      <rect x="20" y="214" width="110" height="10" rx="3" fill="#8C6B45" stroke={BROWN} strokeWidth="2" />
     </g>
   )
 }

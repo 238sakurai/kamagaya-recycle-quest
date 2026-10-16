@@ -3,9 +3,16 @@ import { OBJECT_HIT_RADIUS, ROOM_HEIGHT, ROOM_WIDTH, ROOMS } from './rooms'
 import { RULE_SOURCE_IDS } from './sources'
 
 describe('おへやで有価物さがしの部屋データ', () => {
-  it('部屋 id が重複しない', () => {
+  it('部屋 id が重複せず、4部屋ある', () => {
     const ids = ROOMS.map((r) => r.id)
     expect(new Set(ids).size).toBe(ids.length)
+    expect(ids).toEqual(['kids', 'living', 'entrance', 'storage'])
+  })
+
+  it('金属製品の出し方を学ぶ部屋にはポイントがある', () => {
+    for (const room of ROOMS.filter((r) => r.id === 'entrance' || r.id === 'storage')) {
+      expect(room.tips?.length).toBeGreaterThan(0)
+    }
   })
 
   for (const room of ROOMS) {
@@ -50,6 +57,13 @@ describe('おへやで有価物さがしの部屋データ', () => {
         if ('cardboard' in byId) expect(byId.cardboard).toBe(true)
         if ('electric-blanket' in byId) expect(byId['electric-blanket']).toBe(false)
         if ('blanket' in byId) expect(byId.blanket).toBe(true)
+        if ('bicycle' in byId) expect(byId.bicycle).toBe(true)
+        if ('stove' in byId) expect(byId.stove).toBe(true)
+        if ('e-bike' in byId) expect(byId['e-bike']).toBe(true)
+        if ('oil-heater' in byId) expect(byId['oil-heater']).toBe(false)
+        if ('gas-cylinder' in byId) expect(byId['gas-cylinder']).toBe(false)
+        if ('tire' in byId) expect(byId.tire).toBe(false)
+        if ('bike-battery' in byId) expect(byId['bike-battery']).toBe(false)
       })
     })
   }

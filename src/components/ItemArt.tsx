@@ -220,6 +220,171 @@ function Art({ art }: { art: string }) {
           <path d="M22 40 l-6 -6 M98 40 l6 -6" stroke="#FF9FB2" strokeWidth="3" strokeLinecap="round" />
         </g>
       )
+    case 'bicycle':
+    case 'e-bike':
+      return (
+        <g>
+          <circle cx="30" cy="82" r="22" fill="none" stroke={BROWN} strokeWidth="4" />
+          <circle cx="90" cy="82" r="22" fill="none" stroke={BROWN} strokeWidth="4" />
+          <circle cx="30" cy="82" r="4" fill={BROWN} />
+          <circle cx="90" cy="82" r="4" fill={BROWN} />
+          <path d="M30 82 L50 46 L78 46 L90 82 M50 46 L60 82 L30 82 M78 46 L72 30 M60 82 L78 46" fill="none" stroke={art === 'e-bike' ? '#4A90E2' : '#E8574B'} strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M40 40 h16 M66 28 h14" stroke={BROWN} strokeWidth="5" strokeLinecap="round" />
+          {art === 'e-bike' ? <rect x="52" y="54" width="14" height="22" rx="3" fill="#FFD85A" stroke={BROWN} strokeWidth="2" /> : null}
+        </g>
+      )
+    case 'tricycle':
+      return (
+        <g>
+          <circle cx="36" cy="84" r="20" fill="none" stroke={BROWN} strokeWidth="4" />
+          <circle cx="92" cy="90" r="13" fill="none" stroke={BROWN} strokeWidth="4" />
+          <circle cx="36" cy="84" r="4" fill={BROWN} />
+          <path d="M36 84 L48 50 L82 62 L92 90 M48 50 L40 30 M74 60 L86 60" fill="none" stroke="#FFD85A" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M28 30 h24" stroke={BROWN} strokeWidth="5" strokeLinecap="round" />
+          <rect x="70" y="50" width="22" height="10" rx="4" fill="#E8574B" stroke={BROWN} strokeWidth="2" />
+        </g>
+      )
+    case 'stroller':
+      return (
+        <g>
+          <path d="M30 40 Q30 20 52 20 H84 V56 H30 Z" fill="#B8E4FF" stroke={BROWN} strokeWidth="3" strokeLinejoin="round" />
+          <path d="M84 20 L100 12" stroke={BROWN} strokeWidth="5" strokeLinecap="round" />
+          <path d="M34 56 L30 84 M84 56 L92 84 M30 84 H92" fill="none" stroke="#8C8378" strokeWidth="5" strokeLinecap="round" />
+          <circle cx="34" cy="94" r="10" fill="none" stroke={BROWN} strokeWidth="4" />
+          <circle cx="90" cy="94" r="10" fill="none" stroke={BROWN} strokeWidth="4" />
+        </g>
+      )
+    case 'dry-battery':
+      return (
+        <g>
+          <rect x="32" y="30" width="24" height="64" rx="5" fill="#8C8378" stroke={BROWN} strokeWidth="3" />
+          <rect x="40" y="24" width="8" height="6" fill={BROWN} />
+          <rect x="64" y="30" width="24" height="64" rx="5" fill="#8C8378" stroke={BROWN} strokeWidth="3" />
+          <rect x="72" y="24" width="8" height="6" fill={BROWN} />
+          <rect x="32" y="50" width="24" height="24" fill="#FFD85A" />
+          <rect x="64" y="50" width="24" height="24" fill="#FFD85A" />
+        </g>
+      )
+    case 'kettle':
+      return (
+        <g>
+          <path d="M34 50 H86 L80 96 H40 Z" fill="#FFFDF7" stroke={BROWN} strokeWidth="3" strokeLinejoin="round" />
+          <path d="M34 54 L18 40 L24 34 L40 48" fill="#FFFDF7" stroke={BROWN} strokeWidth="3" strokeLinejoin="round" />
+          <path d="M86 58 Q104 66 86 84" fill="none" stroke={BROWN} strokeWidth="5" strokeLinecap="round" />
+          <rect x="52" y="40" width="16" height="10" rx="3" fill={BROWN} />
+          <rect x="40" y="70" width="40" height="6" rx="3" fill="#B8E4FF" />
+          <path d="M60 96 v8 M50 104 h20" stroke={BROWN} strokeWidth="3" strokeLinecap="round" />
+        </g>
+      )
+    case 'stove':
+      return (
+        <g>
+          <rect x="24" y="28" width="72" height="72" rx="8" fill="#FFFDF7" stroke={BROWN} strokeWidth="3" />
+          <rect x="36" y="38" width="48" height="36" rx="4" fill="#8C8378" stroke={BROWN} strokeWidth="2" />
+          <path d="M44 38 V74 M52 38 V74 M60 38 V74 M68 38 V74 M76 38 V74" stroke={BROWN} strokeWidth="1.5" />
+          <path d="M52 66 Q60 48 68 66 Q60 60 52 66" fill="#FF9FB2" />
+          <rect x="36" y="82" width="48" height="8" rx="3" fill="#B8B0A6" />
+          <circle cx="88" cy="86" r="4" fill="#E8574B" />
+          <path d="M30 100 v8 M90 100 v8" stroke={BROWN} strokeWidth="4" strokeLinecap="round" />
+        </g>
+      )
+    case 'steel-shelf':
+      return (
+        <g>
+          <path d="M22 14 V108 M98 14 V108" stroke="#8C8378" strokeWidth="5" strokeLinecap="round" />
+          {[24, 52, 80].map((y) => (
+            <rect key={y} x="20" y={y} width="80" height="6" fill="#B8B0A6" stroke={BROWN} strokeWidth="2" />
+          ))}
+          <rect x="30" y="34" width="18" height="18" fill="#E0B87A" stroke={BROWN} strokeWidth="2" />
+          <rect x="60" y="62" width="24" height="18" fill="#B8E4FF" stroke={BROWN} strokeWidth="2" />
+        </g>
+      )
+    case 'panel-heater':
+      return (
+        <g>
+          <rect x="18" y="30" width="84" height="56" rx="6" fill="#FFFDF7" stroke={BROWN} strokeWidth="3" />
+          {[42, 54, 66, 78].map((y) => (
+            <path key={y} d={`M26 ${y} H94`} stroke="#FF9FB2" strokeWidth="4" strokeLinecap="round" />
+          ))}
+          <rect x="30" y="86" width="12" height="16" fill="#8C8378" />
+          <rect x="78" y="86" width="12" height="16" fill="#8C8378" />
+          <rect x="60" y="18" width="36" height="14" rx="2" fill="#FFD85A" stroke={BROWN} strokeWidth="2" />
+          <text x="78" y="29" textAnchor="middle" fontSize="8" fontWeight="700" fill={BROWN}>
+            パネル
+          </text>
+        </g>
+      )
+    case 'big-can':
+      return (
+        <g>
+          <rect x="26" y="26" width="68" height="76" rx="4" fill="#DDD" stroke={BROWN} strokeWidth="3" />
+          <rect x="26" y="26" width="68" height="10" fill="#B8B0A6" stroke={BROWN} strokeWidth="3" />
+          <rect x="52" y="18" width="16" height="8" rx="2" fill="#8C8378" stroke={BROWN} strokeWidth="2" />
+          <rect x="36" y="50" width="48" height="26" fill="#58C78E" />
+          <Face x={60} y={60} />
+        </g>
+      )
+    case 'oil-heater':
+      return (
+        <g>
+          <rect x="22" y="26" width="76" height="62" rx="6" fill="#FFFDF7" stroke={BROWN} strokeWidth="3" />
+          {[32, 44, 56, 68, 80].map((x) => (
+            <rect key={x} x={x} y="32" width="8" height="50" rx="2" fill="#B8B0A6" stroke={BROWN} strokeWidth="1.5" />
+          ))}
+          <rect x="88" y="34" width="8" height="46" rx="2" fill="#8C8378" />
+          <circle cx="92" cy="40" r="2" fill="#E8574B" />
+          <circle cx="34" cy="96" r="7" fill="none" stroke={BROWN} strokeWidth="3" />
+          <circle cx="86" cy="96" r="7" fill="none" stroke={BROWN} strokeWidth="3" />
+          <text x="60" y="104" textAnchor="middle" fontSize="9" fontWeight="700" fill={BROWN}>
+            OIL
+          </text>
+        </g>
+      )
+    case 'gas-cylinder':
+      return (
+        <g>
+          <rect x="36" y="30" width="48" height="76" rx="12" fill="#8C8378" stroke={BROWN} strokeWidth="3" />
+          <rect x="52" y="18" width="16" height="12" rx="3" fill="#B8B0A6" stroke={BROWN} strokeWidth="3" />
+          <path d="M44 18 h32" stroke={BROWN} strokeWidth="4" strokeLinecap="round" />
+          <text x="60" y="74" textAnchor="middle" fontSize="11" fontWeight="700" fill="#fff">
+            LPG
+          </text>
+          <path d="M26 18 l-6 -6 M94 18 l6 -6" stroke="#FF9FB2" strokeWidth="3" strokeLinecap="round" />
+        </g>
+      )
+    case 'tire':
+      return (
+        <g>
+          <circle cx="60" cy="62" r="40" fill={BROWN} />
+          <circle cx="60" cy="62" r="24" fill="#8C8378" stroke={BROWN} strokeWidth="2" />
+          <circle cx="60" cy="62" r="8" fill="#DDD" />
+          {[0, 45, 90, 135].map((a) => (
+            <path key={a} d="M60 22 v8 M60 94 v8" stroke="#DDD" strokeWidth="3" transform={`rotate(${a} 60 62)`} />
+          ))}
+        </g>
+      )
+    case 'bike-battery':
+      return (
+        <g>
+          <rect x="40" y="20" width="40" height="84" rx="8" fill="#4A90E2" stroke={BROWN} strokeWidth="3" />
+          <rect x="48" y="28" width="24" height="14" rx="3" fill="#FFFDF7" />
+          <path d="M60 50 l-8 18 h10 l-6 18 l16 -24 h-10 z" fill="#FFD85A" stroke={BROWN} strokeWidth="2" strokeLinejoin="round" />
+          <rect x="52" y="104" width="16" height="6" fill={BROWN} />
+        </g>
+      )
+    case 'pesticide':
+      return (
+        <g>
+          <rect x="50" y="14" width="20" height="12" rx="3" fill={BROWN} />
+          <path d="M50 26 V34 Q40 42 40 54 V98 Q40 104 46 104 H74 Q80 104 80 98 V54 Q80 42 70 34 V26 Z" fill="#8C8378" stroke={BROWN} strokeWidth="3" strokeLinejoin="round" />
+          <rect x="46" y="56" width="28" height="26" rx="3" fill="#FFFDF7" />
+          <circle cx="60" cy="66" r="6" fill="none" stroke={BROWN} strokeWidth="2" />
+          <path d="M55 72 l10 -12 M55 60 l10 12" stroke={BROWN} strokeWidth="2" />
+          <text x="60" y="94" textAnchor="middle" fontSize="8" fontWeight="700" fill="#fff">
+            のうやく
+          </text>
+        </g>
+      )
     default:
       return <circle cx="60" cy="60" r="40" fill="#DDD" />
   }

@@ -103,7 +103,20 @@ describe('App', () => {
     expect(screen.queryByTestId('result-wrong')).toBeNull()
     expect(JSON.parse(localStorage.getItem('krq:progress:v1')!).roomStars).toEqual({ [room.id]: 3 })
     await user.click(screen.getByTestId('next-room'))
-    expect(screen.getByTestId('room-progress')).toHaveTextContent('2 / 2')
+    expect(screen.getByTestId('room-progress')).toHaveTextContent(`2 / ${ROOMS.length}`)
+  })
+
+  it('部屋のタブで物置きに切り替えると、答え合わせのあとに金属製品の出し方のポイントが出る', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByTestId('start-room'))
+    await user.click(screen.getByTestId('room-tab-storage'))
+    const storage = ROOMS.find((r) => r.id === 'storage')!
+    expect(screen.getByTestId('room-progress')).toHaveTextContent(`${ROOMS.indexOf(storage) + 1} / ${ROOMS.length}`)
+    for (const o of storage.objects.filter((x) => x.accepted)) await user.click(screen.getByTestId(`object-${o.id}`))
+    await user.click(screen.getByTestId('check'))
+    expect(screen.getByTestId('stars')).toHaveAttribute('data-stars', '3')
+    expect(plainText(screen.getByTestId('room-tips'))).toContain('灯油')
   })
 
   it('対象外に丸をつけると、答え合わせでまちがいとして解説が出る', async () => {

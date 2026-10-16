@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { RoomScene } from '../components/RoomScene'
@@ -28,6 +28,13 @@ export function RoomHuntScreen({ bestStars, onResult, onExit, playSound, onCeleb
   const [result, setResult] = useState<RoomResult | null>(null)
 
   const room = ROOMS[roomIndex]
+  const tabListRef = useRef<HTMLDivElement>(null)
+
+  // 選んだ部屋のタブが見える位置までスクロールする
+  useEffect(() => {
+    const tab = tabListRef.current?.querySelector<HTMLElement>('[aria-selected="true"]')
+    tab?.scrollIntoView?.({ inline: 'center', block: 'nearest' })
+  }, [roomIndex])
   const acceptedCount = useMemo(() => room.objects.filter((o) => o.accepted).length, [room])
   const hasNext = roomIndex + 1 < ROOMS.length
 
@@ -73,10 +80,24 @@ export function RoomHuntScreen({ bestStars, onResult, onExit, playSound, onCeleb
               {roomIndex + 1} / {ROOMS.length}
             </span>
           </div>
-          <p className="text-base font-bold">
-            <Ruby text={room.name} />
-            {bestStars[room.id] ? <span className="ml-2 text-sm text-eco-brown/70">さいこう {'★'.repeat(bestStars[room.id])}</span> : null}
-          </p>
+          <div ref={tabListRef} className="flex gap-1.5 overflow-x-auto py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" role="tablist" aria-label="部屋をえらぶ">
+            {ROOMS.map((r, i) => (
+              <button
+                key={r.id}
+                type="button"
+                role="tab"
+                aria-selected={i === roomIndex}
+                data-testid={`room-tab-${r.id}`}
+                onClick={() => i !== roomIndex && restart(i)}
+                className={`tap-area shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-bold ring-2 ${
+                  i === roomIndex ? 'bg-eco-green text-white ring-eco-green' : 'bg-white text-eco-brown ring-eco-brown/10'
+                }`}
+              >
+                <Ruby text={r.name} />
+                {bestStars[r.id] ? <span className="ml-1 text-xs">{'★'.repeat(bestStars[r.id])}</span> : null}
+              </button>
+            ))}
+          </div>
         </div>
       }
     >
@@ -129,6 +150,21 @@ export function RoomHuntScreen({ bestStars, onResult, onExit, playSound, onCeleb
           <ResultList title="⭕ 正解[せいかい]！ 出[だ]せるもの" tone="green" objects={result.found} testId="result-found" />
           <ResultList title="❌ これは出[だ]せないよ" tone="pink" objects={result.wrong} testId="result-wrong" />
           <ResultList title="❗ 見[み]のがした有価物[ゆうかぶつ]" tone="yellow" objects={result.missed} testId="result-missed" />
+
+          {room.tips && room.tips.length > 0 ? (
+            <Card tone="sky" className="flex flex-col gap-2" >
+              <p className="text-base font-black">
+                <Ruby text="💡 出[だ]し方[かた]のポイント" />
+              </p>
+              <ul className="list-disc space-y-1 pl-5 text-sm leading-relaxed" data-testid="room-tips">
+                {room.tips.map((tip) => (
+                  <li key={tip}>
+                    <Ruby text={tip} />
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          ) : null}
 
           <div className="flex flex-col gap-2">
             {hasNext ? <Button size="lg" onClick={() => restart(roomIndex + 1)} label="つぎの部屋[へや]へ ▶" data-testid="next-room" /> : null}
