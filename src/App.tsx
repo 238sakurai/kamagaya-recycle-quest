@@ -2,16 +2,17 @@ import { useCallback, useEffect, useState } from 'react'
 import { Confetti } from './components/Confetti'
 import { useSettings } from './hooks/useSettings'
 import { useVisibilityPause } from './hooks/useVisibilityPause'
-import { clearAllData, DEFAULT_PROGRESS, loadProgress, recordClear, saveSchool, type Progress } from './lib/storage'
+import { clearAllData, DEFAULT_PROGRESS, loadProgress, recordClear, recordRoomStars, saveSchool, type Progress } from './lib/storage'
 import { playSound as play, type SoundName } from './lib/sound'
 import { ClearScreen } from './screens/ClearScreen'
+import { RoomHuntScreen } from './screens/RoomHuntScreen'
 import { SourcesScreen } from './screens/SourcesScreen'
 import { Stage1Sort } from './screens/Stage1Sort'
 import { Stage2Flag } from './screens/Stage2Flag'
 import { Stage3Reward } from './screens/Stage3Reward'
 import { TitleScreen } from './screens/TitleScreen'
 
-type ScreenId = 'title' | 'stage1' | 'stage2' | 'stage3' | 'clear' | 'sources'
+type ScreenId = 'title' | 'stage1' | 'stage2' | 'stage3' | 'clear' | 'sources' | 'room'
 
 export default function App() {
   const { settings, toggle, reset: resetSettings } = useSettings()
@@ -29,6 +30,12 @@ export default function App() {
   const playSound = useCallback((name: SoundName) => play(name, settings.sound), [settings.sound])
   const celebrate = useCallback(() => setBurst((b) => b + 1), [])
   const gain = useCallback((p: number) => setPoints((prev) => prev + p), [])
+
+  const startRoom = () => {
+    setRun((r) => r + 1)
+    playSound('tap')
+    setScreen('room')
+  }
 
   const start = () => {
     setPoints(0)
@@ -63,7 +70,7 @@ export default function App() {
     <>
       <Confetti burstKey={burst} enabled={animate} />
       {screen === 'title' ? (
-        <TitleScreen settings={settings} onToggle={toggle} progress={progress} onStart={start} onShowSources={() => showSources('title')} animate={animate} />
+        <TitleScreen settings={settings} onToggle={toggle} progress={progress} onStart={start} onStartRoom={startRoom} onShowSources={() => showSources('title')} animate={animate} />
       ) : null}
       {screen === 'stage1' ? (
         <Stage1Sort key={`s1-${run}`} points={points} onGain={gain} onComplete={() => setScreen('stage2')} playSound={playSound} onCelebrate={celebrate} />
@@ -80,11 +87,23 @@ export default function App() {
           progress={progress}
           onSelectSchool={(id) => setProgress(saveSchool(id))}
           onRestart={() => setScreen('title')}
+          onStartRoom={startRoom}
           onShowSources={() => showSources('clear')}
           animate={animate}
         />
       ) : null}
       {screen === 'sources' ? <SourcesScreen onBack={() => setScreen(returnTo)} onClearData={clearData} /> : null}
+      {screen === 'room' ? (
+        <RoomHuntScreen
+          key={`room-${run}`}
+          bestStars={progress.roomStars}
+          onResult={(roomId, stars) => setProgress(recordRoomStars(roomId, stars))}
+          onExit={() => setScreen('title')}
+          playSound={playSound}
+          onCelebrate={celebrate}
+          animate={animate}
+        />
+      ) : null}
     </>
   )
 }

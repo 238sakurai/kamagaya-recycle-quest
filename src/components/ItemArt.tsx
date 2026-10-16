@@ -11,9 +11,14 @@ const BROWN = '#453830'
 export function ItemArt({ art, className = 'size-40' }: ItemArtProps) {
   return (
     <svg viewBox="0 0 120 120" className={className} role="img" aria-hidden="true">
-      <Art art={art} />
+      <ItemShape art={art} />
     </svg>
   )
+}
+
+/** 120×120 の座標系で描く形だけ（部屋のイラストなど、別の SVG の中に置くとき用） */
+export function ItemShape({ art }: { art: string }) {
+  return <Art art={art} />
 }
 
 function Face({ x = 60, y = 66 }: { x?: number; y?: number }) {
@@ -132,6 +137,87 @@ function Art({ art }: { art: string }) {
           <circle cx="51" cy="78" r="2.6" fill={BROWN} />
           <circle cx="69" cy="78" r="2.6" fill={BROWN} />
           <path d="M54 88 q6 3 12 0" stroke={BROWN} strokeWidth="2.5" fill="none" strokeLinecap="round" />
+        </g>
+      )
+    case 'blanket':
+      return (
+        <g>
+          <rect x="20" y="34" width="80" height="56" rx="12" fill="#B8E4FF" stroke={BROWN} strokeWidth="3" />
+          <path d="M20 50 H100 M20 66 H100" stroke="#FFFDF7" strokeWidth="6" />
+          <Face x={60} y={60} />
+        </g>
+      )
+    case 'plush':
+      return (
+        <g>
+          <circle cx="38" cy="36" r="12" fill="#E0B87A" stroke={BROWN} strokeWidth="3" />
+          <circle cx="82" cy="36" r="12" fill="#E0B87A" stroke={BROWN} strokeWidth="3" />
+          <circle cx="60" cy="52" r="26" fill="#E0B87A" stroke={BROWN} strokeWidth="3" />
+          <ellipse cx="60" cy="90" rx="30" ry="22" fill="#E0B87A" stroke={BROWN} strokeWidth="3" />
+          <ellipse cx="60" cy="92" rx="16" ry="12" fill="#FFFDF7" />
+          <circle cx="50" cy="48" r="3" fill={BROWN} />
+          <circle cx="70" cy="48" r="3" fill={BROWN} />
+          <ellipse cx="60" cy="58" rx="5" ry="3.5" fill={BROWN} />
+          <path d="M55 64 q5 4 10 0" stroke={BROWN} strokeWidth="2.5" fill="none" strokeLinecap="round" />
+        </g>
+      )
+    case 'pet-bottle':
+      return (
+        <g>
+          <rect x="50" y="12" width="20" height="10" rx="3" fill="#4A90E2" stroke={BROWN} strokeWidth="3" />
+          <path d="M50 22 V30 Q40 38 40 50 V98 Q40 104 46 104 H74 Q80 104 80 98 V50 Q80 38 70 30 V22 Z" fill="#E8F6FF" stroke={BROWN} strokeWidth="3" strokeLinejoin="round" />
+          <rect x="40" y="56" width="40" height="22" fill="#B8E4FF" opacity="0.9" />
+          <path d="M42 62 l6 6 M50 60 l10 10 M62 60 l10 10" stroke="#fff" strokeWidth="2" />
+          <text x="60" y="94" textAnchor="middle" fontSize="11" fontWeight="700" fill={BROWN}>
+            PET
+          </text>
+        </g>
+      )
+    case 'bulb':
+      return (
+        <g>
+          <circle cx="60" cy="48" r="30" fill="#FFF6C8" stroke={BROWN} strokeWidth="3" />
+          <path d="M48 70 h24 v12 a6 6 0 0 1 -6 6 h-12 a6 6 0 0 1 -6 -6 z" fill="#B8B0A6" stroke={BROWN} strokeWidth="3" strokeLinejoin="round" />
+          <path d="M50 88 h20 M52 96 h16" stroke={BROWN} strokeWidth="3" strokeLinecap="round" />
+          <path d="M50 40 l8 12 l4 -8 l8 12" stroke="#B8B0A6" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          <path d="M26 20 l-6 -6 M94 20 l6 -6" stroke="#B8B0A6" strokeWidth="3" strokeLinecap="round" />
+        </g>
+      )
+    case 'mirror':
+      return (
+        <g>
+          <circle cx="60" cy="50" r="32" fill="#FF9FB2" stroke={BROWN} strokeWidth="3" />
+          <circle cx="60" cy="50" r="22" fill="#E8F6FF" stroke={BROWN} strokeWidth="2" />
+          <path d="M48 40 l12 -4 M46 50 l6 -8" stroke="#fff" strokeWidth="3" strokeLinecap="round" />
+          <rect x="54" y="80" width="12" height="28" rx="6" fill="#FF9FB2" stroke={BROWN} strokeWidth="3" />
+        </g>
+      )
+    case 'curtain':
+      return (
+        <g>
+          <rect x="18" y="16" width="84" height="8" rx="4" fill="#B8B0A6" stroke={BROWN} strokeWidth="2.5" />
+          <path d="M24 24 H96 V96 Q84 104 72 96 Q60 104 48 96 Q36 104 24 96 Z" fill="#FFD85A" stroke={BROWN} strokeWidth="3" strokeLinejoin="round" />
+          <path d="M42 24 V98 M60 24 V98 M78 24 V98" stroke="#E6B800" strokeWidth="3" />
+          <Face x={60} y={60} />
+        </g>
+      )
+    case 'tv':
+      return (
+        <g>
+          <rect x="16" y="28" width="88" height="64" rx="8" fill="#8C8378" stroke={BROWN} strokeWidth="3" />
+          <rect x="24" y="36" width="72" height="48" rx="4" fill="#B8E4FF" stroke={BROWN} strokeWidth="2" />
+          <path d="M30 42 l10 8 M34 60 l14 -10" stroke="#fff" strokeWidth="3" strokeLinecap="round" />
+          <rect x="36" y="92" width="48" height="8" rx="3" fill={BROWN} />
+          <path d="M52 100 v10 M68 100 v10" stroke={BROWN} strokeWidth="4" strokeLinecap="round" />
+        </g>
+      )
+    case 'plate':
+      return (
+        <g>
+          <path d="M18 58 a42 18 0 0 1 84 0 l-10 4 l-14 -8 l-10 10 l-12 -6 l-14 8 l-14 -4 z" fill="#FFFDF7" stroke={BROWN} strokeWidth="3" strokeLinejoin="round" />
+          <path d="M18 58 l10 -4 l14 8 l10 -10 l12 6 l14 -8 l14 4 a42 18 0 0 1 -74 4 z" fill="#FFFDF7" stroke={BROWN} strokeWidth="3" strokeLinejoin="round" transform="translate(0 8)" />
+          <ellipse cx="60" cy="56" rx="22" ry="8" fill="#B8E4FF" opacity="0.7" />
+          <path d="M22 40 l-6 -6 M98 40 l6 -6" stroke="#FF9FB2" strokeWidth="3" strokeLinecap="round" />
         </g>
       )
     default:

@@ -3,6 +3,7 @@ import { Mascot } from '../components/Mascot'
 import { Ruby } from '../components/Ruby'
 import { Screen } from '../components/Screen'
 import { SettingsBar } from '../components/SettingsBar'
+import { MAX_POINTS } from '../data/rewards'
 import type { Progress, Settings } from '../lib/storage'
 
 interface TitleScreenProps {
@@ -10,11 +11,13 @@ interface TitleScreenProps {
   onToggle: (key: keyof Settings) => void
   progress: Progress
   onStart: () => void
+  onStartRoom: () => void
   onShowSources: () => void
   animate: boolean
 }
 
-export function TitleScreen({ settings, onToggle, progress, onStart, onShowSources, animate }: TitleScreenProps) {
+export function TitleScreen({ settings, onToggle, progress, onStart, onStartRoom, onShowSources, animate }: TitleScreenProps) {
+  const roomStars = Object.values(progress.roomStars).reduce((sum, n) => sum + n, 0)
   return (
     <Screen testId="screen-title" header={<SettingsBar settings={settings} onToggle={onToggle} />}>
       <div className="flex flex-1 flex-col items-center justify-center gap-5 text-center">
@@ -33,9 +36,15 @@ export function TitleScreen({ settings, onToggle, progress, onStart, onShowSourc
           <Ruby text="鎌ケ谷市[かまがやし]PTAの「有価物回収運動[ゆうかぶつかいしゅううんどう]」を、ゲームで楽[たの]しく学[まな]ぼう！" />
         </p>
         <Button size="lg" onClick={onStart} label="▶ スタート！" className="w-full max-w-xs" data-testid="start" />
+        <Button variant="yellow" onClick={onStartRoom} label="🏠 おへやで有価物[ゆうかぶつ]さがし" className="w-full max-w-xs" data-testid="start-room" />
+        {roomStars > 0 ? (
+          <p className="-mt-2 text-sm font-bold text-eco-brown/70">
+            <Ruby text={`おへやさがしの星[ほし]：${'★'.repeat(roomStars)}`} />
+          </p>
+        ) : null}
         {progress.clearCount > 0 ? (
           <p className="text-sm font-bold text-eco-brown/70">
-            <Ruby text={`これまでのさいこうポイント：${progress.bestPoints}（クリア ${progress.clearCount}回[かい]）`} />
+            <Ruby text={`これまでのさいこうポイント：${Math.min(progress.bestPoints, MAX_POINTS)} / ${MAX_POINTS}（クリア ${progress.clearCount}回[かい]）`} />
           </p>
         ) : null}
       </div>

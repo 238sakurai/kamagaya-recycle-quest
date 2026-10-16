@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 import { SORT_ITEMS } from '../src/data/items'
 import { FLAG_QUIZZES, REWARD_QUIZ } from '../src/data/quiz'
+import { ROOMS } from '../src/data/rooms'
 
 async function playStage1(page: Page) {
   for (let i = 0; i < SORT_ITEMS.length; i++) {
@@ -76,4 +77,24 @@ test('アニメーションと音をOFFにできる', async ({ page }) => {
   await expect(page.getByRole('switch', { name: '効果音' })).toHaveAttribute('aria-checked', 'false')
   await page.reload()
   await expect(page.getByRole('switch', { name: '効果音' })).toHaveAttribute('aria-checked', 'false')
+})
+
+test('おへやで有価物さがしで、2部屋とも3つ星を取れる', async ({ page }) => {
+  await page.goto('/')
+  await page.getByTestId('start-room').click()
+  for (let i = 0; i < ROOMS.length; i++) {
+    const room = ROOMS[i]
+    await expect(page.getByTestId('room-progress')).toHaveText(`${i + 1} / ${ROOMS.length}`)
+    await expect(page.getByTestId('check')).toBeDisabled()
+    for (const o of room.objects.filter((x) => x.accepted)) {
+      await page.getByTestId(`object-${o.id}`).click()
+      await expect(page.getByTestId(`object-${o.id}`)).toHaveAttribute('data-marked', 'true')
+    }
+    await page.getByTestId('check').click()
+    await expect(page.getByTestId('stars')).toHaveAttribute('data-stars', '3')
+    await expect(page.getByTestId('result-found').locator('li')).toHaveCount(room.objects.filter((x) => x.accepted).length)
+    if (i + 1 < ROOMS.length) await page.getByTestId('next-room').click()
+  }
+  await page.getByTestId('room-exit').click()
+  await expect(page.getByTestId('screen-title')).toContainText('おへやさがしの星')
 })

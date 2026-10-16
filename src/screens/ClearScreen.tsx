@@ -13,6 +13,7 @@ interface ClearScreenProps {
   progress: Progress
   onSelectSchool: (id: string | null) => void
   onRestart: () => void
+  onStartRoom: () => void
   onShowSources: () => void
   animate: boolean
 }
@@ -23,7 +24,7 @@ const LINKS = [
   { id: 'sites', label: '町名別の回収場所一覧', url: SOURCES.kaishubasyo.url },
 ]
 
-export function ClearScreen({ points, progress, onSelectSchool, onRestart, onShowSources, animate }: ClearScreenProps) {
+export function ClearScreen({ points, progress, onSelectSchool, onRestart, onStartRoom, onShowSources, animate }: ClearScreenProps) {
   const school = SCHOOLS.find((s) => s.id === progress.schoolId) ?? null
   return (
     <Screen testId="screen-clear">
@@ -108,6 +109,16 @@ export function ClearScreen({ points, progress, onSelectSchool, onRestart, onSho
             <Ruby text="回収日[かいしゅうび]の朝[あさ]は、車[くるま]に気[き]をつけてね" />
           </li>
         </ul>
+      </Card>
+
+      <Card tone="yellow" className="flex flex-col gap-2">
+        <p className="text-base font-bold">
+          <Ruby text="🏠 ボーナス：おへやで有価物[ゆうかぶつ]さがし" />
+        </p>
+        <p className="text-sm leading-relaxed">
+          <Ruby text="散[ち]らかった部屋[へや]の中[なか]から、有価物回収[ゆうかぶつかいしゅう]に出[だ]せるものをさがして丸[まる]をつけよう！" />
+        </p>
+        <Button variant="yellow" onClick={onStartRoom} label="おへやさがしに挑戦[ちょうせん] ▶" data-testid="start-room" />
       </Card>
 
       <div className="flex flex-col gap-2">

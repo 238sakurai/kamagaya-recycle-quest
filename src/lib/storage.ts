@@ -12,13 +12,15 @@ export interface Progress {
   clearCount: number
   /** 任意で選んだ小学校区の id。未選択なら null */
   schoolId: string | null
+  /** ボーナスモード「おへやで有価物さがし」の部屋ごとの最高の星の数（1〜3） */
+  roomStars: Record<string, number>
 }
 
 const SETTINGS_KEY = 'krq:settings:v1'
 const PROGRESS_KEY = 'krq:progress:v1'
 
 export const DEFAULT_SETTINGS: Settings = { sound: true, animation: true }
-export const DEFAULT_PROGRESS: Progress = { bestPoints: 0, clearCount: 0, schoolId: null }
+export const DEFAULT_PROGRESS: Progress = { bestPoints: 0, clearCount: 0, schoolId: null, roomStars: {} }
 
 function read<T>(key: string, fallback: T, validate: (v: unknown) => v is T): T {
   try {
@@ -62,7 +64,12 @@ export function loadProgress(): Progress {
     bestPoints: typeof p.bestPoints === 'number' ? p.bestPoints : 0,
     clearCount: typeof p.clearCount === 'number' ? p.clearCount : 0,
     schoolId: typeof p.schoolId === 'string' ? p.schoolId : null,
+    roomStars: isStarsRecord(p.roomStars) ? p.roomStars : {},
   }
+}
+
+function isStarsRecord(v: unknown): v is Record<string, number> {
+  return typeof v === 'object' && v !== null && !Array.isArray(v) && Object.values(v).every((n) => typeof n === 'number')
 }
 
 export function saveProgress(progress: Progress): void {
@@ -76,6 +83,15 @@ export function recordClear(points: number): Progress {
     bestPoints: Math.max(current.bestPoints, points),
     clearCount: current.clearCount + 1,
   }
+  saveProgress(next)
+  return next
+}
+
+/** 部屋の結果を記録する。星の数が過去より多いときだけ更新する */
+export function recordRoomStars(roomId: string, stars: number): Progress {
+  const current = loadProgress()
+  const best = Math.max(current.roomStars[roomId] ?? 0, stars)
+  const next: Progress = { ...current, roomStars: { ...current.roomStars, [roomId]: best } }
   saveProgress(next)
   return next
 }

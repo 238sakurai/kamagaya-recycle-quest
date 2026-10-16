@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import { SORT_ITEMS } from './data/items'
+import { ROOMS } from './data/rooms'
 import { stripFurigana } from './lib/furigana'
 
 /** <ruby> の読みと括弧を除いた本文テキスト */
@@ -81,6 +82,40 @@ describe('App', () => {
     await user.click(screen.getByRole('button', { name: /もういちど/ }))
     await waitFor(() => expect(screen.getByTestId('option-prep')).toBeEnabled())
     expect(screen.getByTestId('option-asis')).toBeDisabled()
+  })
+
+  it('おへやで有価物さがしで、有価物だけに丸をつけると3つ星になる', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByTestId('start-room'))
+    expect(screen.getByTestId('screen-room')).toBeInTheDocument()
+    expect(screen.getByTestId('check')).toBeDisabled()
+    const room = ROOMS[0]
+    for (const o of room.objects.filter((x) => x.accepted)) await user.click(screen.getByTestId(`object-${o.id}`))
+    // もういちどタップすると丸が消える
+    const first = room.objects.find((x) => x.accepted)!
+    await user.click(screen.getByTestId(`object-${first.id}`))
+    expect(screen.getByTestId(`object-${first.id}`)).toHaveAttribute('data-marked', 'false')
+    await user.click(screen.getByTestId(`object-${first.id}`))
+    await user.click(screen.getByTestId('check'))
+    expect(screen.getByTestId('stars')).toHaveAttribute('data-stars', '3')
+    expect(screen.getByTestId('result-found').children).toHaveLength(room.objects.filter((x) => x.accepted).length)
+    expect(screen.queryByTestId('result-wrong')).toBeNull()
+    expect(JSON.parse(localStorage.getItem('krq:progress:v1')!).roomStars).toEqual({ [room.id]: 3 })
+    await user.click(screen.getByTestId('next-room'))
+    expect(screen.getByTestId('room-progress')).toHaveTextContent('2 / 2')
+  })
+
+  it('対象外に丸をつけると、答え合わせでまちがいとして解説が出る', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByTestId('start-room'))
+    const wrong = ROOMS[0].objects.find((x) => !x.accepted)!
+    await user.click(screen.getByTestId(`object-${wrong.id}`))
+    await user.click(screen.getByTestId('check'))
+    expect(screen.getByTestId('stars')).toHaveAttribute('data-stars', '1')
+    expect(plainText(screen.getByTestId('result-wrong'))).toContain(stripFurigana(wrong.explanation))
+    expect(screen.getByTestId(`object-${wrong.id}`)).toHaveAttribute('data-status', 'wrong')
   })
 
   it('出典画面に公式サイトへのリンクとキャラクターの説明がある', async () => {

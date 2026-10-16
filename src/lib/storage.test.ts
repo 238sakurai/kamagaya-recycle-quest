@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { clearAllData, loadProgress, loadSettings, recordClear, saveSchool, saveSettings } from './storage'
+import { clearAllData, loadProgress, loadSettings, recordClear, recordRoomStars, saveSchool, saveSettings } from './storage'
 
 describe('storage', () => {
   beforeEach(() => {
@@ -31,6 +31,15 @@ describe('storage', () => {
     expect(loadProgress().schoolId).toBe('kamagaya')
     saveSchool(null)
     expect(loadProgress().schoolId).toBeNull()
+  })
+
+  it('部屋の星は最高記録だけを残し、壊れた値は無視する', () => {
+    recordRoomStars('kids', 2)
+    recordRoomStars('kids', 1)
+    recordRoomStars('living', 3)
+    expect(loadProgress().roomStars).toEqual({ kids: 2, living: 3 })
+    localStorage.setItem('krq:progress:v1', JSON.stringify({ bestPoints: 1, clearCount: 1, schoolId: null, roomStars: ['x'] }))
+    expect(loadProgress().roomStars).toEqual({})
   })
 
   it('保存データの消去はこのアプリのキーだけを消す', () => {
