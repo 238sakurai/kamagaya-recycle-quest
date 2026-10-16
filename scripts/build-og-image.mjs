@@ -6,33 +6,18 @@
  * ゲームと同じ配色・SVG で描いた HTML を Playwright の Chromium でスクリーンショットし、
  * public/og-image.png に書き出す。文字はシステムフォント（macOS のヒラギノ丸ゴ）で描くため、
  * macOS で実行する想定。むだなしくんの公式画像は承諾を得ていないため描かない
- * （docs/mudanashikun-usage-notes.md）。案内役はオリジナルの「リサ丸」。
+ * （docs/mudanashikun-usage-notes.md）。代わりにいらすとやのイラストを使う（NOTICE.md）。
  */
+import { readFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { chromium } from '@playwright/test'
 
 const root = fileURLToPath(new URL('..', import.meta.url))
 const BROWN = '#453830'
 
-/** リサ丸（src/components/Mascot.tsx と同じ造形） */
-const mascot = `
-<svg viewBox="0 0 120 120" width="300" height="300" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="60" cy="62" r="46" fill="#58C78E" stroke="${BROWN}" stroke-width="3" />
-  <g fill="none" stroke="#FFFDF7" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M46 44 l8 -12 l8 12" />
-    <path d="M78 58 l-2 14 l-14 -2" />
-    <path d="M38 72 l14 -2 l-2 14" />
-  </g>
-  <circle cx="46" cy="58" r="4" fill="${BROWN}" />
-  <circle cx="74" cy="58" r="4" fill="${BROWN}" />
-  <circle cx="47.5" cy="56.5" r="1.4" fill="#fff" />
-  <circle cx="75.5" cy="56.5" r="1.4" fill="#fff" />
-  <path d="M50 72 q10 12 20 0 q-10 6 -20 0" stroke="${BROWN}" stroke-width="3" fill="#FF9FB2" stroke-linecap="round" />
-  <circle cx="34" cy="68" r="5" fill="#FF9FB2" opacity="0.7" />
-  <circle cx="86" cy="68" r="5" fill="#FF9FB2" opacity="0.7" />
-  <path d="M14 30 l6 -6 M20 40 l-8 -2 M106 30 l-6 -6 M100 40 l8 -2" stroke="#FFD85A" stroke-width="4" stroke-linecap="round" />
-  <path d="M60 16 q10 -14 22 -6 q-8 12 -22 6" fill="#3EA973" stroke="${BROWN}" stroke-width="2.5" />
-</svg>`
+/** いらすとや「リサイクルのイメージのイラスト」（public/images/irasutoya-recycle.png）を data URI で埋め込む */
+const illustration = `data:image/png;base64,${(await readFile(`${root}public/images/irasutoya-recycle.png`)).toString('base64')}`
+const mascot = `<img src="${illustration}" width="290" height="279" alt="" />`
 
 /** 資源のイラスト（src/components/ItemArt.tsx の縮小版） */
 const face = (x, y) => `
@@ -110,9 +95,9 @@ const html = `<!doctype html>
   .lead { margin-top: 22px; font-size: 36px; font-weight: 700; color: #6b5a4e; }
   .items { position: absolute; left: 76px; bottom: 48px; display: flex; gap: 10px; align-items: flex-end; }
   .item { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 22px; font-weight: 700; }
-  .mascot { position: absolute; right: 120px; top: 110px; }
+  .mascot { position: absolute; right: 70px; top: 100px; }
   .flag { position: absolute; right: 70px; bottom: 56px; }
-  .sun { position: absolute; right: 90px; top: 50px; width: 70px; height: 70px; border-radius: 50%; background: #FFD85A; }
+  .sun { position: absolute; right: 44px; top: 44px; width: 70px; height: 70px; border-radius: 50%; background: #FFD85A; }
 </style>
 </head>
 <body>

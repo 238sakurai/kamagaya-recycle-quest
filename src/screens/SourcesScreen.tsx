@@ -81,8 +81,19 @@ export function SourcesScreen({ onBack, onClearData }: SourcesScreenProps) {
         <p data-testid="character-status">
           {officialApproved
             ? `市の承諾を得た画像を使用しています。${CHARACTER.official.credit}`
-            : `市の公式ページでキャラクターのデザインは無断使用・転載できないとされているため、承諾を得るまで${CHARACTER.official.name}の公式画像は使用していません。案内役は「${CHARACTER.placeholder.name}」（${CHARACTER.placeholder.description}）です。`}
+            : `市の公式ページでキャラクターのデザインは無断使用・転載できないとされているため、承諾を得るまで${CHARACTER.official.name}の公式画像は使用していません。`}
         </p>
+        {!officialApproved ? (
+          <p data-testid="illustration-credit">
+            タイトルとクリア画面のイラストは、
+            <ExternalLink href={CHARACTER.placeholder.pageUrl}>
+              {CHARACTER.placeholder.author}「{CHARACTER.placeholder.name}」
+            </ExternalLink>
+            を
+            <ExternalLink href={CHARACTER.placeholder.termsUrl}>利用規約</ExternalLink>
+            の範囲で使用しています（{CHARACTER.placeholder.description}。確認日 {CHARACTER.placeholder.verifiedAt}）。
+          </p>
+        ) : null}
         <p>鎌ケ谷市のマスコットキャラクター「かまたん」も、使用には市の承認申請が必要なため使用していません。</p>
         <SourceList sources={CHARACTER_SOURCE_IDS.map((id) => SOURCES[id])} testId="character-source-list" />
         <p className="text-xs text-eco-brown/70">
@@ -116,7 +127,7 @@ export function SourcesScreen({ onBack, onClearData }: SourcesScreenProps) {
       </Section>
 
       <Section title="ライセンス">
-        <p>アプリ本体は MIT License です。イラスト・効果音はすべて自作で、外部の素材は使用していません。出典と利用条件の一覧は、配布物に同梱の NOTICE.md に記載しています。</p>
+        <p>アプリ本体は MIT License です。タイトルとクリア画面のイラスト（いらすとや）を除き、イラスト・効果音は自作です。いらすとやの素材は規約により再配布できません。出典と利用条件の一覧は、配布物に同梱の NOTICE.md に記載しています。</p>
       </Section>
 
       <Button onClick={onBack} label="◀ もどる" data-testid="back" />

@@ -43,7 +43,7 @@
 ## キャラクター利用条件
 
 - 鎌ケ谷市のごみ減量・リサイクル推進キャラクターは「むだなしくん」（むだナシくんカンパニー、所管: クリーン推進課）です。市の公式ページで「キャラクター等のデザインの無断使用・転載はできません」とされており、公開された申請手続きがないため、使用には市の承諾が必要と解釈しています（[`docs/mudanashikun-usage-notes.md`](docs/mudanashikun-usage-notes.md)）。
-- 承諾を得るまで**公式画像は一切含めず**、案内役はオリジナルキャラクター「リサ丸」（[`src/components/Mascot.tsx`](src/components/Mascot.tsx)）を表示しています。むだなしくんに似せた造形は避けています。
+- 承諾を得るまで**公式画像は一切含めず**、タイトル・クリア画面には[いらすとや「リサイクルのイメージのイラスト」](https://www.irasutoya.com/2013/09/blog-post_7776.html)を[利用規約](https://www.irasutoya.com/p/terms.html)の範囲で表示しています（[`src/components/Mascot.tsx`](src/components/Mascot.tsx)）。この画像はいらすとやの規約により再配布できないため、MIT License の対象外です（`NOTICE.md`）。
 - 承諾後は [`src/config/character.ts`](src/config/character.ts) の `imageSrc` と `officialImageApproved` を更新すると、案内役の画像と名前が切り替わります。
 - 鎌ケ谷市マスコットキャラクター「かまたん」も使用申請が必要なため使用していません。
 
@@ -73,7 +73,7 @@ Vite / React / TypeScript / Tailwind CSS v4 / インラインSVG / localStorage 
 npm run og:image   # public/og-image.png（1200×630）を生成
 ```
 
-SNS やチャットでリンクを共有したときに表示されるアイキャッチ画像です。ゲームと同じ SVG（リサ丸・資源・黄色い旗）を Playwright の Chromium で描画します。文字はシステムフォント（ヒラギノ丸ゴ）で描くため macOS で生成します。公開 URL を変えたときは `index.html` の `og:url` / `og:image` も書き換えてください。
+SNS やチャットでリンクを共有したときに表示されるアイキャッチ画像です。ゲームと同じ SVG（資源・黄色い旗）といらすとやのイラストを Playwright の Chromium で描画します。文字はシステムフォント（ヒラギノ丸ゴ）で描くため macOS で生成します。公開 URL を変えたときは `index.html` の `og:url` / `og:image` も書き換えてください。
 
 ### 公開
 
@@ -115,7 +115,7 @@ SNS やチャットでリンクを共有したときに表示されるアイキ�
 src/config/      案内役キャラクターの設定（公式画像の承諾状態）
 src/data/        出典・出題データ・報酬・学区
 src/lib/         ふりがな・採点・保存・効果音・シャッフル・部屋の答え合わせ
-src/components/  UI 部品・SVG イラスト（資源・街・学校・リサ丸）
+src/components/  UI 部品・SVG イラスト（資源・街・学校・部屋）
 src/screens/     タイトル・ステージ1〜3・クリア・出典・おへやで有価物さがし
 src/hooks/       設定・タブ非表示時の一時停止
 e2e/             Playwright

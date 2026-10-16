@@ -8,9 +8,18 @@ describe('キャラクター設定', () => {
     else expect(imageSrc).toBeNull()
   })
 
-  it('未承諾のあいだはオリジナルキャラクターの名前を使う', () => {
+  it('未承諾のあいだは、いらすとやのイラストの説明を alt に使う', () => {
     expect(isOfficialMascotAvailable()).toBe(CHARACTER.official.officialImageApproved && CHARACTER.official.imageSrc !== null)
-    expect(mascotName()).toBe(isOfficialMascotAvailable() ? CHARACTER.official.name : CHARACTER.placeholder.name)
+    if (isOfficialMascotAvailable()) expect(mascotName()).toBe(CHARACTER.official.name)
+    else expect(mascotName()).toContain(CHARACTER.placeholder.author)
+  })
+
+  it('いらすとやのイラストは出典ページ・規約・確認日を持ち、画像が public にある', async () => {
+    const { existsSync } = await import('node:fs')
+    expect(CHARACTER.placeholder.pageUrl).toMatch(/^https:\/\/www\.irasutoya\.com\//)
+    expect(CHARACTER.placeholder.termsUrl).toMatch(/^https:\/\/www\.irasutoya\.com\//)
+    expect(CHARACTER.placeholder.verifiedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+    expect(existsSync(`public/${CHARACTER.placeholder.imageSrc}`)).toBe(true)
   })
 
   it('公式ページの URL は鎌ケ谷市の公式ドメイン', () => {

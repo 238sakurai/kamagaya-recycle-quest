@@ -30,7 +30,7 @@ export function ClearScreen({ points, progress, onSelectSchool, onRestart, onSta
     <Screen testId="screen-clear">
       <div className="flex flex-col items-center gap-2 text-center">
         <div className={animate ? 'animate-float' : ''}>
-          <Mascot mood="cheer" className="size-32" />
+          <Mascot className="size-36" />
         </div>
         <h2 className="text-3xl font-black">
           <Ruby text="🎊 大作戦[だいさくせん]クリア！" />

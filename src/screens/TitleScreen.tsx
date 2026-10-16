@@ -22,7 +22,7 @@ export function TitleScreen({ settings, onToggle, progress, onStart, onStartRoom
     <Screen testId="screen-title" header={<SettingsBar settings={settings} onToggle={onToggle} />}>
       <div className="flex flex-1 flex-col items-center justify-center gap-5 text-center">
         <div className={animate ? 'animate-float' : ''}>
-          <Mascot mood="cheer" className="size-40" />
+          <Mascot className="size-44" />
         </div>
         <h1 className="text-balance text-4xl font-black leading-tight tracking-tight">
           かまがや
