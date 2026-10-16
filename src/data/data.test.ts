@@ -3,7 +3,7 @@ import { SORT_ITEMS } from './items'
 import { FLAG_QUIZZES, REWARD_QUIZ } from './quiz'
 import { MAX_POINTS, REWARDS } from './rewards'
 import { SCHOOLS } from './schools'
-import { SOURCES, SOURCE_LIST } from './sources'
+import { CHARACTER_SOURCE_IDS, RULE_SOURCE_IDS, SOURCES, SOURCE_LIST } from './sources'
 import { POINTS_FIRST_TRY } from '../lib/score'
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/
@@ -15,6 +15,17 @@ describe('出典', () => {
       expect(s.verifiedAt).toMatch(DATE)
       expect(s.pageUpdatedAt).toMatch(DATE)
     }
+  })
+
+  it('ルールの出典とキャラクターの出典で全出典を網羅し、重複しない', () => {
+    const ids = [...RULE_SOURCE_IDS, ...CHARACTER_SOURCE_IDS]
+    expect(new Set(ids).size).toBe(ids.length)
+    expect(ids.sort()).toEqual(SOURCE_LIST.map((s) => s.id).sort())
+  })
+
+  it('出題データはルールの出典だけを参照する', () => {
+    for (const item of SORT_ITEMS) for (const id of item.sources) expect(RULE_SOURCE_IDS).toContain(id)
+    for (const q of [...FLAG_QUIZZES, REWARD_QUIZ]) for (const id of q.sources) expect(RULE_SOURCE_IDS).toContain(id)
   })
 })
 

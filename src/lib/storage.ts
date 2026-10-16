@@ -85,3 +85,13 @@ export function saveSchool(schoolId: string | null): Progress {
   saveProgress(next)
   return next
 }
+
+/** 設定と進捗をすべて消す（このアプリのキーだけを対象にする） */
+export function clearAllData(): void {
+  try {
+    globalThis.localStorage?.removeItem(SETTINGS_KEY)
+    globalThis.localStorage?.removeItem(PROGRESS_KEY)
+  } catch {
+    // 保存できない環境では何もしない
+  }
+}

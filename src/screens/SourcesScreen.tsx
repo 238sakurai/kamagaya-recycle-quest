@@ -1,60 +1,127 @@
+import type { ReactNode } from 'react'
+import { useState } from 'react'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { Screen } from '../components/Screen'
-import { CONTACT, SOURCE_LIST } from '../data/sources'
+import { CHARACTER, isOfficialMascotAvailable } from '../config/character'
+import { CHARACTER_SOURCE_IDS, CONTACT, RULE_SOURCE_IDS, SOURCES, type Source } from '../data/sources'
 
 interface SourcesScreenProps {
   onBack: () => void
+  onClearData: () => void
 }
 
-export function SourcesScreen({ onBack }: SourcesScreenProps) {
+function Section({ title, children, tone }: { title: string; children: ReactNode; tone?: 'white' | 'sky' | 'pink' | 'yellow' }) {
+  return (
+    <Card tone={tone} className="flex flex-col gap-2 text-sm leading-relaxed">
+      <h3 className="text-base font-bold">{title}</h3>
+      {children}
+    </Card>
+  )
+}
+
+function ExternalLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="font-bold underline underline-offset-4">
+      {children} ↗
+    </a>
+  )
+}
+
+function SourceList({ sources, testId }: { sources: Source[]; testId: string }) {
+  return (
+    <ul className="flex flex-col gap-3" data-testid={testId}>
+      {sources.map((s) => (
+        <li key={s.id} className="text-sm leading-relaxed">
+          <ExternalLink href={s.url}>{s.title}</ExternalLink>
+          <br />
+          <span className="text-eco-brown/70">
+            ページ更新日 {s.pageUpdatedAt} ／ 確認日 {s.verifiedAt}
+          </span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+export function SourcesScreen({ onBack, onClearData }: SourcesScreenProps) {
+  const [cleared, setCleared] = useState(false)
+  const officialApproved = isOfficialMascotAvailable()
+
+  const clearData = () => {
+    if (!window.confirm('このブラウザに保存されたポイント・クリア回数・設定・学区の選択を消します。よろしいですか？')) return
+    onClearData()
+    setCleared(true)
+  }
+
   return (
     <Screen testId="screen-sources" header={<h2 className="text-xl font-black">出典・このゲームについて</h2>}>
-      <Card className="flex flex-col gap-2 text-sm leading-relaxed">
-        <p>
-          「かまがや リサイクル大作戦！」は、鎌ケ谷市PTAの有価物回収運動への理解と参加を広げるために作られた、非公式の普及啓発ゲームです。出題内容は以下の鎌ケ谷市公式ページと照合しています。
-        </p>
-        <p>
-          市の通常のごみ収集（市指定袋・ごみ集積所）と、PTAが主体となる有価物回収運動（黄色い旗・午前9時まで）は別の制度です。ゲームでは有価物回収運動のルールを扱い、対象外の品目については市のごみ収集の案内を補足しています。
-        </p>
-      </Card>
+      <Section title="かまがや リサイクル大作戦！">
+        <p>鎌ケ谷市PTAの有価物回収運動（何を・どう分けて・いつ・どこに出すか、集めた資源がどう学校に還元されるか）を、3〜5分で楽しく学ぶ子ども向けゲームです。</p>
+        <p className="font-bold">このゲームは鎌ケ谷市および鎌ケ谷市PTAの公式事業ではありません。個人が制作した非公式の普及啓発ゲームです。</p>
+      </Section>
 
-      <Card tone="sky" className="flex flex-col gap-3">
-        <p className="text-base font-bold">出典（鎌ケ谷市公式サイト）</p>
-        <ul className="flex flex-col gap-3" data-testid="source-list">
-          {SOURCE_LIST.map((s) => (
-            <li key={s.id} className="text-sm leading-relaxed">
-              <a href={s.url} target="_blank" rel="noopener noreferrer" className="font-bold underline underline-offset-4">
-                {s.title}
-              </a>
-              <br />
-              <span className="text-eco-brown/70">
-                ページ更新日 {s.pageUpdatedAt} ／ 確認日 {s.verifiedAt}
-              </span>
-            </li>
-          ))}
-        </ul>
+      <Section title="出典（鎌ケ谷市公式サイト）" tone="sky">
+        <p>出題内容は以下の公式ページと照合しています。公式ページの文章や画像は転載せず、要点を子ども向けに言い換えています。</p>
+        <SourceList sources={RULE_SOURCE_IDS.map((id) => SOURCES[id])} testId="source-list" />
         <p className="text-xs text-eco-brown/70">
           ルールは変わることがあります。最新の情報は公式ページ、または {CONTACT.department}（電話 {CONTACT.tel}）でご確認ください。
         </p>
-      </Card>
+      </Section>
 
-      <Card className="flex flex-col gap-2 text-sm leading-relaxed">
-        <p className="text-base font-bold">プライバシーと省電力</p>
-        <ul className="list-disc space-y-1 pl-5">
-          <li>氏名・住所・学校名などの個人情報は収集しません。入力も求めません。</li>
-          <li>設定と進捗（ポイント・任意の学区選択）はこの端末のブラウザ内にだけ保存されます。</li>
-          <li>通信を伴うランキングはありません。GPS・カメラ・マイクも使いません。</li>
-          <li>アニメーションと効果音はいつでもOFFにできます。タブが非表示のときは動きを止めます。</li>
-        </ul>
-      </Card>
+      <Section title="市のごみ収集との違い">
+        <p>市の通常のごみ収集（市指定袋・ごみ集積所・朝8時まで）と、PTAが主体となる有価物回収運動（黄色い旗・回収日当日の午前9時まで）は別の制度です。このゲームは有価物回収運動のルールを扱い、対象外の品目については市のごみ収集の案内を補足しています。</p>
+        <p>回収日の具体的な日付と回収場所の住所はゲーム内に表示しません。公式の年間回収日程表と町名別の回収場所一覧で確認してください。回収場所には利用できる人が限られる場所や、変更になる場所があります。</p>
+      </Section>
 
-      <Card className="flex flex-col gap-2 text-sm leading-relaxed">
-        <p className="text-base font-bold">キャラクターについて</p>
+      <Section title={`${CHARACTER.official.name}について`} tone="yellow">
         <p>
-          ゲームに登場する緑のキャラクター「リサ丸」は、リサイクルマークをモチーフにしたオリジナルキャラクターです。鎌ケ谷市のマスコット「かまたん」は、利用条件の確認と使用承認を得るまで使用していません。
+          「{CHARACTER.official.name}」は、1997年に鎌ケ谷市のごみ減量とリサイクル推進のために生まれた市のキャラクターです（{CHARACTER.official.description}）。
         </p>
-      </Card>
+        <p data-testid="character-status">
+          {officialApproved
+            ? `市の承諾を得た画像を使用しています。${CHARACTER.official.credit}`
+            : `市の公式ページでキャラクターのデザインは無断使用・転載できないとされているため、承諾を得るまで${CHARACTER.official.name}の公式画像は使用していません。案内役は「${CHARACTER.placeholder.name}」（${CHARACTER.placeholder.description}）です。`}
+        </p>
+        <p>鎌ケ谷市のマスコットキャラクター「かまたん」も、使用には市の承認申請が必要なため使用していません。</p>
+        <SourceList sources={CHARACTER_SOURCE_IDS.map((id) => SOURCES[id])} testId="character-source-list" />
+        <p className="text-xs text-eco-brown/70">
+          キャラクターの所管: {CONTACT.characterDepartment}（電話 {CONTACT.characterTel}）
+        </p>
+      </Section>
+
+      <Section title="プライバシー">
+        <ul className="list-disc space-y-1 pl-5">
+          <li>氏名・住所・学校名・位置情報などの個人情報は収集しません。入力も求めません。GPS・カメラ・マイクも使いません。</li>
+          <li>最高ポイント・クリア回数・設定（音・アニメーション）・任意で選んだ学区は、この端末のブラウザ（localStorage）の中にだけ保存され、外部には送信しません。</li>
+          <li>アクセス解析ツールは使っていません。通信を伴うランキングもありません。</li>
+          <li>公式ページへのリンクは新しいタブで開きます。リンク先では鎌ケ谷市のサイトの利用条件が適用されます。</li>
+        </ul>
+        <div className="mt-1 flex flex-col gap-1">
+          <Button variant="secondary" onClick={clearData} label="保存[ほぞん]データを消[け]す" data-testid="clear-data" disabled={cleared} />
+          {cleared ? (
+            <p role="status" className="text-xs text-eco-brown/70" data-testid="clear-data-done">
+              保存データを消しました。設定は初期値に戻ります。
+            </p>
+          ) : null}
+        </div>
+      </Section>
+
+      <Section title="省電力の工夫">
+        <p>イラストはすべてインライン SVG で、常時動く描画ループは持ちません。演出は短い CSS アニメーションだけで、紙吹雪は約2秒で消えます。タブが非表示になるとアニメーションと音を止め、設定の「うごき OFF」「おと OFF」でいつでも止められます。OS の「視差効果を減らす」設定も尊重します。</p>
+      </Section>
+
+      <Section title="安全のために">
+        <p>重い物・ガラス・割れ物・危険物は子どもだけで運ばず、家庭での準備や回収場所への持ち出しは大人と一緒に行ってください。ゲーム内の演出（本・鑑賞会・備品）は制度のしくみを学ぶための例で、実際の奨励金の金額や各PTAの予算配分を表すものではありません。</p>
+      </Section>
+
+      <Section title="ライセンス">
+        <p>
+          アプリ本体は MIT License です。イラスト・効果音はすべて自作で、外部素材は使用していません。出典と利用条件の一覧は
+          <ExternalLink href="https://github.com/238sakurai/kamagaya-recycle-quest/blob/main/NOTICE.md">NOTICE.md</ExternalLink>
+          を参照してください。
+        </p>
+      </Section>
 
       <Button onClick={onBack} label="◀ もどる" data-testid="back" />
     </Screen>

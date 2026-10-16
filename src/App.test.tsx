@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import { SORT_ITEMS } from './data/items'
 import { stripFurigana } from './lib/furigana'
@@ -63,11 +63,27 @@ describe('App', () => {
     expect(screen.getByTestId('option-asis')).toBeDisabled()
   })
 
-  it('出典画面に公式サイトへのリンクがある', async () => {
+  it('出典画面に公式サイトへのリンクとキャラクターの説明がある', async () => {
     const user = userEvent.setup()
     render(<App />)
     await user.click(screen.getByRole('button', { name: '出典・このゲームについて' }))
     const list = screen.getByTestId('source-list')
-    expect(list.querySelectorAll('a[href^="https://www.city.kamagaya.chiba.jp/"]').length).toBeGreaterThanOrEqual(4)
+    expect(list.querySelectorAll('a[href^="https://www.city.kamagaya.chiba.jp/"]').length).toBe(4)
+    expect(screen.getByTestId('character-status')).toHaveTextContent('むだなしくん')
+    expect(screen.getByTestId('character-source-list').querySelectorAll('a').length).toBe(2)
+  })
+
+  it('出典画面から保存データを消せる', async () => {
+    const user = userEvent.setup()
+    localStorage.setItem('krq:progress:v1', JSON.stringify({ bestPoints: 100, clearCount: 2, schoolId: 'tobu' }))
+    vi.spyOn(window, 'confirm').mockReturnValue(true)
+    render(<App />)
+    expect(screen.getByTestId('screen-title')).toHaveTextContent('さいこうポイント')
+    await user.click(screen.getByRole('button', { name: '出典・このゲームについて' }))
+    await user.click(screen.getByTestId('clear-data'))
+    expect(screen.getByTestId('clear-data-done')).toBeInTheDocument()
+    expect(localStorage.getItem('krq:progress:v1')).toBeNull()
+    await user.click(screen.getByTestId('back'))
+    expect(screen.getByTestId('screen-title')).not.toHaveTextContent('さいこうポイント')
   })
 })

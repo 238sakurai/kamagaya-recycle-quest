@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { loadSettings, saveSettings, type Settings } from '../lib/storage'
+import { DEFAULT_SETTINGS, loadSettings, saveSettings, type Settings } from '../lib/storage'
 
 export function useSettings() {
   const [settings, setSettings] = useState<Settings>(() => loadSettings())
@@ -13,5 +13,7 @@ export function useSettings() {
     setSettings((prev) => ({ ...prev, [key]: !prev[key] }))
   }, [])
 
-  return { settings, toggle }
+  const reset = useCallback(() => setSettings(DEFAULT_SETTINGS), [])
+
+  return { settings, toggle, reset }
 }

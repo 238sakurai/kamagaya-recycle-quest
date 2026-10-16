@@ -1,7 +1,10 @@
+import { CHARACTER, isOfficialMascotAvailable, mascotName } from '../config/character'
+
 /**
- * オリジナルキャラクター「リサ丸（りさまる）」。
- * リサイクルマークをモチーフにした緑のまんまるキャラクター。
- * 市のマスコット「かまたん」は利用許諾を得るまで使わない。
+ * 案内役キャラクター。
+ * 市のごみ減量・リサイクル推進キャラクター「むだなしくん」の画像は、市の承諾を得るまで使わない。
+ * 承諾前はオリジナルキャラクター「リサ丸（りさまる）」を表示する。
+ * リサ丸はリサイクルマークをモチーフにした緑のまんまるキャラクターで、むだなしくんには似せていない。
  */
 interface MascotProps {
   mood?: 'happy' | 'think' | 'cheer'
@@ -9,10 +12,24 @@ interface MascotProps {
 }
 
 export function Mascot({ mood = 'happy', className = 'size-32' }: MascotProps) {
+  if (isOfficialMascotAvailable()) {
+    return (
+      <img
+        src={`${import.meta.env.BASE_URL}${CHARACTER.official.imageSrc}`}
+        alt={CHARACTER.official.name}
+        className={`${className} object-contain`}
+        decoding="async"
+      />
+    )
+  }
+  return <RisamaruArt mood={mood} className={className} />
+}
+
+function RisamaruArt({ mood, className }: Required<MascotProps>) {
   const mouth =
     mood === 'cheer' ? 'M50 72 q10 12 20 0 q-10 6 -20 0' : mood === 'think' ? 'M52 74 q8 -2 16 2' : 'M50 72 q10 8 20 0'
   return (
-    <svg viewBox="0 0 120 120" className={className} role="img" aria-label="リサ丸">
+    <svg viewBox="0 0 120 120" className={className} role="img" aria-label={mascotName()}>
       <circle cx="60" cy="62" r="46" fill="#58C78E" stroke="#453830" strokeWidth="3" />
       {/* リサイクルの三つ矢 */}
       <g fill="none" stroke="#FFFDF7" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round">

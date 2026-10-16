@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { loadProgress, loadSettings, recordClear, saveSchool, saveSettings } from './storage'
+import { clearAllData, loadProgress, loadSettings, recordClear, saveSchool, saveSettings } from './storage'
 
 describe('storage', () => {
   beforeEach(() => {
@@ -31,6 +31,16 @@ describe('storage', () => {
     expect(loadProgress().schoolId).toBe('kamagaya')
     saveSchool(null)
     expect(loadProgress().schoolId).toBeNull()
+  })
+
+  it('保存データの消去はこのアプリのキーだけを消す', () => {
+    localStorage.setItem('other-app:save', '1')
+    saveSettings({ sound: false, animation: false })
+    recordClear(50)
+    clearAllData()
+    expect(loadSettings()).toEqual({ sound: true, animation: true })
+    expect(loadProgress()).toMatchObject({ bestPoints: 0, clearCount: 0, schoolId: null })
+    expect(localStorage.getItem('other-app:save')).toBe('1')
   })
 
   it('個人情報に相当するキーは保存しない', () => {

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Confetti } from './components/Confetti'
 import { useSettings } from './hooks/useSettings'
 import { useVisibilityPause } from './hooks/useVisibilityPause'
-import { loadProgress, recordClear, saveSchool, type Progress } from './lib/storage'
+import { clearAllData, DEFAULT_PROGRESS, loadProgress, recordClear, saveSchool, type Progress } from './lib/storage'
 import { playSound as play, type SoundName } from './lib/sound'
 import { ClearScreen } from './screens/ClearScreen'
 import { SourcesScreen } from './screens/SourcesScreen'
@@ -14,7 +14,7 @@ import { TitleScreen } from './screens/TitleScreen'
 type ScreenId = 'title' | 'stage1' | 'stage2' | 'stage3' | 'clear' | 'sources'
 
 export default function App() {
-  const { settings, toggle } = useSettings()
+  const { settings, toggle, reset: resetSettings } = useSettings()
   const hidden = useVisibilityPause()
   const [screen, setScreen] = useState<ScreenId>('title')
   const [returnTo, setReturnTo] = useState<ScreenId>('title')
@@ -49,6 +49,12 @@ export default function App() {
     setScreen('sources')
   }
 
+  const clearData = () => {
+    clearAllData()
+    setProgress(DEFAULT_PROGRESS)
+    resetSettings()
+  }
+
   useEffect(() => {
     window.scrollTo({ top: 0 })
   }, [screen])
@@ -78,7 +84,7 @@ export default function App() {
           animate={animate}
         />
       ) : null}
-      {screen === 'sources' ? <SourcesScreen onBack={() => setScreen(returnTo)} /> : null}
+      {screen === 'sources' ? <SourcesScreen onBack={() => setScreen(returnTo)} onClearData={clearData} /> : null}
     </>
   )
 }
