@@ -9,3 +9,4 @@ blob-report
 playwright/.cache
 coverage
 .claude/worktrees
+*.tsbuildinfo
