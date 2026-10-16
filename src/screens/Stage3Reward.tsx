@@ -9,12 +9,11 @@ import { SchoolScene } from '../components/SchoolScene'
 import { Screen } from '../components/Screen'
 import { REWARD_QUIZ } from '../data/quiz'
 import { MAX_POINTS, REWARDS, type Reward } from '../data/rewards'
-import { newlyUnlocked, pointsForAnswer } from '../lib/score'
+import { newlyUnlocked } from '../lib/score'
 import type { SoundName } from '../lib/sound'
 
 interface Stage3Props {
   points: number
-  onGain: (points: number) => void
   onComplete: () => void
   playSound: (name: SoundName) => void
   onCelebrate: () => void
@@ -29,13 +28,11 @@ const DELIVERIES = [
   { id: 'cloth', label: '👕 布類[ぬのるい]を回収[かいしゅう]！' },
 ]
 
-export function Stage3Reward({ points, onGain, onComplete, playSound, onCelebrate, animate }: Stage3Props) {
+export function Stage3Reward({ points, onComplete, playSound, onCelebrate, animate }: Stage3Props) {
   const [phase, setPhase] = useState<Phase>('intro')
   const [truck, setTruck] = useState<'idle' | 'arrive' | 'done'>('idle')
-  const [quizAttempts, setQuizAttempts] = useState(0)
   const [quizWrong, setQuizWrong] = useState<string[]>([])
   const [lastCorrect, setLastCorrect] = useState(false)
-  const [gained, setGained] = useState(0)
   const [delivered, setDelivered] = useState(0)
   const [deliveredPoints, setDeliveredPoints] = useState(0)
   const [unlocked, setUnlocked] = useState<Reward[]>([])
@@ -56,15 +53,11 @@ export function Stage3Reward({ points, onGain, onComplete, playSound, onCelebrat
   const thresholds = useMemo(() => REWARDS.map((r) => r.threshold), [])
   const unlockedArts = useMemo(() => new Set(unlocked.map((r) => r.art)), [unlocked])
 
+  /** しくみを学ぶためのクイズ。ポイントは加算しない（満点はステージ1〜2の100点） */
   const answerQuiz = (choice: string) => {
-    const attempts = quizAttempts + 1
     const correct = choice === REWARD_QUIZ.correctId
-    setQuizAttempts(attempts)
     setLastCorrect(correct)
     if (correct) {
-      const g = pointsForAnswer(attempts)
-      setGained(g)
-      onGain(g)
       playSound('correct')
       onCelebrate()
     } else {
@@ -137,7 +130,7 @@ export function Stage3Reward({ points, onGain, onComplete, playSound, onCelebrat
           {phase === 'quiz' ? <OptionList options={REWARD_QUIZ.options} onSelect={answerQuiz} wrongIds={quizWrong} /> : null}
           {phase === 'quiz-feedback' ? (
             lastCorrect ? (
-              <Feedback kind="correct" gained={gained} message={REWARD_QUIZ.explanation} onNext={afterQuizFeedback} nextLabel="学校[がっこう]に届[とど]けよう ▶" />
+              <Feedback kind="correct" message={REWARD_QUIZ.explanation} onNext={afterQuizFeedback} nextLabel="学校[がっこう]に届[とど]けよう ▶" />
             ) : (
               <Feedback kind="wrong" message="有価物[ゆうかぶつ]は「ごみ」じゃなくて「資源[しげん]」。もういちど考[かんが]えてみよう！" onNext={afterQuizFeedback} />
             )

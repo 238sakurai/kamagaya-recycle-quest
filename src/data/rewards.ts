@@ -13,25 +13,26 @@ export interface Reward {
 export const REWARDS: Reward[] = [
   {
     id: 'books',
-    threshold: 50,
+    threshold: 30,
     title: '図書室[としょしつ]に新[あたら]しい本[ほん]がふえた！',
     description: '奨励金[しょうれいきん]は図書[としょ]の購入[こうにゅう]などに使[つか]われるよ。',
     art: 'books',
   },
   {
     id: 'concert',
-    threshold: 110,
+    threshold: 60,
     title: '芸術鑑賞会[げいじゅつかんしょうかい]がひらかれた！',
     description: '音楽[おんがく]や劇[げき]を見[み]る会[かい]の費用[ひよう]にもなるんだ。',
     art: 'concert',
   },
   {
     id: 'equipment',
-    threshold: 170,
+    threshold: 85,
     title: '学校[がっこう]の備品[びひん]がふえた！',
     description: 'みんなが使[つか]う道具[どうぐ]もそろうよ。',
     art: 'equipment',
   },
 ]
 
-export const MAX_POINTS = 210
+/** 満点。1問5点 × 20問 */
+export const MAX_POINTS = 100

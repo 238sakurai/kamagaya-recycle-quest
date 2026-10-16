@@ -48,7 +48,7 @@ describe('App', () => {
     const item = SORT_ITEMS.find((i) => i.id === itemId)!
     await clickOption(user, item.verdict)
     expect(screen.getByTestId('feedback-correct')).toBeInTheDocument()
-    expect(screen.getByTestId('points')).toHaveTextContent('10')
+    expect(screen.getByTestId('points')).toHaveTextContent('5')
     expect(plainText(screen.getByTestId('feedback-correct'))).toContain(stripFurigana(item.explanation))
   })
 

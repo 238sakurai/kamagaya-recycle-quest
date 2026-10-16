@@ -72,7 +72,7 @@ export default function App() {
         <Stage2Flag key={`s2-${run}`} points={points} onGain={gain} onComplete={() => setScreen('stage3')} playSound={playSound} onCelebrate={celebrate} animate={animate} />
       ) : null}
       {screen === 'stage3' ? (
-        <Stage3Reward key={`s3-${run}`} points={points} onGain={gain} onComplete={finish} playSound={playSound} onCelebrate={celebrate} animate={animate} />
+        <Stage3Reward key={`s3-${run}`} points={points} onComplete={finish} playSound={playSound} onCelebrate={celebrate} animate={animate} />
       ) : null}
       {screen === 'clear' ? (
         <ClearScreen

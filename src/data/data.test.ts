@@ -4,7 +4,7 @@ import { FLAG_QUIZZES, REWARD_QUIZ } from './quiz'
 import { MAX_POINTS, REWARDS } from './rewards'
 import { SCHOOLS } from './schools'
 import { CHARACTER_SOURCE_IDS, RULE_SOURCE_IDS, SOURCES, SOURCE_LIST } from './sources'
-import { POINTS_FIRST_TRY } from '../lib/score'
+import { POINTS_FIRST_TRY, POINTS_RETRY } from '../lib/score'
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/
 
@@ -96,11 +96,17 @@ describe('ステージ2・3のクイズ', () => {
 })
 
 describe('ポイントと報酬', () => {
-  it('満点は全問1回正解の合計と一致する', () => {
+  it('満点は100点で、ステージ1〜2を全問1回で正解した合計と一致する', () => {
     const stage1 = SORT_ITEMS.reduce((sum, i) => sum + POINTS_FIRST_TRY + (i.verdict === 'prep' ? POINTS_FIRST_TRY : 0), 0)
     const stage2 = POINTS_FIRST_TRY + FLAG_QUIZZES.length * POINTS_FIRST_TRY
-    const stage3 = POINTS_FIRST_TRY
-    expect(MAX_POINTS).toBe(stage1 + stage2 + stage3)
+    expect(MAX_POINTS).toBe(100)
+    expect(stage1 + stage2).toBe(MAX_POINTS)
+  })
+
+  it('全問やり直しで正解しても、報酬が2つ以上は解放される', () => {
+    const answers = SORT_ITEMS.length + SORT_ITEMS.filter((i) => i.verdict === 'prep').length + 1 + FLAG_QUIZZES.length
+    const minimum = answers * POINTS_RETRY
+    expect(REWARDS.filter((r) => r.threshold <= minimum).length).toBeGreaterThanOrEqual(2)
   })
 
   it('報酬のしきい値は昇順で満点以下', () => {

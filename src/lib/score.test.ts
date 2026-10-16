@@ -13,9 +13,9 @@ describe('pointsForAnswer', () => {
 
 describe('newlyUnlocked', () => {
   it('またいだしきい値だけを返す', () => {
-    expect(newlyUnlocked([50, 110, 170], 40, 120)).toEqual([0, 1])
-    expect(newlyUnlocked([50, 110, 170], 120, 150)).toEqual([])
-    expect(newlyUnlocked([50, 110, 170], 160, 220)).toEqual([2])
+    expect(newlyUnlocked([30, 60, 85], 20, 70)).toEqual([0, 1])
+    expect(newlyUnlocked([30, 60, 85], 70, 80)).toEqual([])
+    expect(newlyUnlocked([30, 60, 85], 80, 100)).toEqual([2])
   })
 })
 
