@@ -4,6 +4,7 @@ import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { Screen } from '../components/Screen'
 import { CHARACTER, isOfficialMascotAvailable } from '../config/character'
+import { ILLUSTRATIONS, ILLUSTRATIONS_VERIFIED_AT, IRASUTOYA_TERMS_URL } from '../data/illustrations'
 import { CHARACTER_SOURCE_IDS, CONTACT, RULE_SOURCE_IDS, SOURCES, type Source } from '../data/sources'
 
 interface SourcesScreenProps {
@@ -101,6 +102,25 @@ export function SourcesScreen({ onBack, onClearData }: SourcesScreenProps) {
         </p>
       </Section>
 
+      <Section title="イラストの出典（いらすとや）" tone="yellow">
+        <p>
+          資源や部屋の品目のアイコン {ILLUSTRATIONS.length} 点は、
+          <ExternalLink href="https://www.irasutoya.com/">いらすとや</ExternalLink>
+          の素材を<ExternalLink href={IRASUTOYA_TERMS_URL}>利用規約</ExternalLink>の範囲で縮小して使用しています（確認日 {ILLUSTRATIONS_VERIFIED_AT}）。素材の著作権は作者にあり、このゲームから素材を取り出して配布することはできません。
+        </p>
+        <details>
+          <summary className="tap-area cursor-pointer font-bold">使用している素材の一覧</summary>
+          <ul className="mt-2 flex flex-col gap-1 text-xs" data-testid="illustration-list">
+            {ILLUSTRATIONS.map((i) => (
+              <li key={i.key}>
+                <ExternalLink href={i.pageUrl}>{i.title}</ExternalLink>
+                {i.note ? `（${i.note}）` : ''}
+              </li>
+            ))}
+          </ul>
+        </details>
+      </Section>
+
       <Section title="プライバシー">
         <ul className="list-disc space-y-1 pl-5">
           <li>氏名・住所・学校名・位置情報などの個人情報は収集しません。入力も求めません。GPS・カメラ・マイクも使いません。</li>
@@ -127,7 +147,7 @@ export function SourcesScreen({ onBack, onClearData }: SourcesScreenProps) {
       </Section>
 
       <Section title="ライセンス">
-        <p>アプリ本体は MIT License です。タイトルとクリア画面のイラスト（いらすとや）を除き、イラスト・効果音は自作です。いらすとやの素材は規約により再配布できません。出典と利用条件の一覧は、配布物に同梱の NOTICE.md に記載しています。</p>
+        <p>アプリ本体は MIT License です。タイトル画面と品目アイコンのイラスト（いらすとや）を除き、街・学校・部屋の背景や効果音は自作です。いらすとやの素材は規約により再配布できません。出典と利用条件の一覧は、配布物に同梱の NOTICE.md に記載しています。</p>
       </Section>
 
       <Button onClick={onBack} label="◀ もどる" data-testid="back" />

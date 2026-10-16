@@ -43,7 +43,14 @@
 ## キャラクター利用条件
 
 - 鎌ケ谷市のごみ減量・リサイクル推進キャラクターは「むだなしくん」（むだナシくんカンパニー、所管: クリーン推進課）です。市の公式ページで「キャラクター等のデザインの無断使用・転載はできません」とされており、公開された申請手続きがないため、使用には市の承諾が必要と解釈しています（[`docs/mudanashikun-usage-notes.md`](docs/mudanashikun-usage-notes.md)）。
-- 承諾を得るまで**公式画像は一切含めず**、タイトル・クリア画面には[いらすとや「リサイクルのイメージのイラスト」](https://www.irasutoya.com/2013/09/blog-post_7776.html)を[利用規約](https://www.irasutoya.com/p/terms.html)の範囲で表示しています（[`src/components/Mascot.tsx`](src/components/Mascot.tsx)）。この画像はいらすとやの規約により再配布できないため、MIT License の対象外です（`NOTICE.md`）。
+- 承諾を得るまで**公式画像は一切含めず**、タイトル・クリア画面には[いらすとや「リサイクルのイメージのイラスト」](https://www.irasutoya.com/2013/09/blog-post_7776.html)を[利用規約](https://www.irasutoya.com/p/terms.html)の範囲で表示しています（[`src/components/Mascot.tsx`](src/components/Mascot.tsx)）。
+
+## イラストの出典（いらすとや）
+
+- ステージ1の資源と「おへやで有価物さがし」の品目アイコン 33 点は、いらすとやの素材を 240px に縮小して `public/images/items/` に置いています。素材名と出典ページの一覧は [`src/data/illustrations.ts`](src/data/illustrations.ts) と [`NOTICE.md`](NOTICE.md) にあり、ゲーム内の「出典・このゲームについて」画面からも確認できます。
+- いらすとやの素材は著作権が作者にあり、素材を主体とした再配布・販売は禁止です。これらの画像と OGP 画像は MIT License の対象外です。
+- 規約では 21 点以上の素材を使った商用デザインは有償です。本アプリはタイトル画像を含めて 34 点を使う無料・広告なしの非商用コンテンツとして扱い、商用利用に転用する場合はいらすとやへの相談が必要です。
+- ユニットテストで、品目データの `art` がすべて素材一覧と画像ファイルに対応していること（100KB 以下）、未使用の素材を同梱していないことを検査しています。
 - 承諾後は [`src/config/character.ts`](src/config/character.ts) の `imageSrc` と `officialImageApproved` を更新すると、案内役の画像と名前が切り替わります。
 - 鎌ケ谷市マスコットキャラクター「かまたん」も使用申請が必要なため使用していません。
 
@@ -115,7 +122,7 @@ SNS やチャットでリンクを共有したときに表示されるアイキ�
 src/config/      案内役キャラクターの設定（公式画像の承諾状態）
 src/data/        出典・出題データ・報酬・学区
 src/lib/         ふりがな・採点・保存・効果音・シャッフル・部屋の答え合わせ
-src/components/  UI 部品・SVG イラスト（資源・街・学校・部屋）
+src/components/  UI 部品・SVG（街・学校・部屋の背景）・品目アイコン（いらすとや画像）
 src/screens/     タイトル・ステージ1〜3・クリア・出典・おへやで有価物さがし
 src/hooks/       設定・タブ非表示時の一時停止
 e2e/             Playwright

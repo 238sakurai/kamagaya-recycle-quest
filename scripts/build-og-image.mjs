@@ -6,7 +6,7 @@
  * ゲームと同じ配色・SVG で描いた HTML を Playwright の Chromium でスクリーンショットし、
  * public/og-image.png に書き出す。文字はシステムフォント（macOS のヒラギノ丸ゴ）で描くため、
  * macOS で実行する想定。むだなしくんの公式画像は承諾を得ていないため描かない
- * （docs/mudanashikun-usage-notes.md）。代わりにいらすとやのイラストを使う（NOTICE.md）。
+ * （docs/mudanashikun-usage-notes.md）。タイトル画像と資源のイラストはいらすとやの素材を使う（NOTICE.md）。
  */
 import { readFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
@@ -19,44 +19,9 @@ const BROWN = '#453830'
 const illustration = `data:image/png;base64,${(await readFile(`${root}public/images/irasutoya-recycle.png`)).toString('base64')}`
 const mascot = `<img src="${illustration}" width="290" height="279" alt="" />`
 
-/** 資源のイラスト（src/components/ItemArt.tsx の縮小版） */
-const face = (x, y) => `
-  <circle cx="${x - 9}" cy="${y}" r="2.6" fill="${BROWN}" />
-  <circle cx="${x + 9}" cy="${y}" r="2.6" fill="${BROWN}" />
-  <path d="M${x - 6} ${y + 8} q6 5 12 0" stroke="${BROWN}" stroke-width="2.5" fill="none" stroke-linecap="round" />
-  <circle cx="${x - 15}" cy="${y + 6}" r="3" fill="#FF9FB2" opacity="0.7" />
-  <circle cx="${x + 15}" cy="${y + 6}" r="3" fill="#FF9FB2" opacity="0.7" />`
-
-const items = {
-  newspaper: `
-    <rect x="22" y="28" width="76" height="64" rx="6" fill="#FFFDF7" stroke="${BROWN}" stroke-width="3" />
-    <rect x="30" y="36" width="60" height="8" rx="2" fill="${BROWN}" />
-    <rect x="30" y="50" width="44" height="3" rx="1.5" fill="#B8B0A6" />
-    <rect x="30" y="58" width="60" height="3" rx="1.5" fill="#B8B0A6" />
-    <rect x="30" y="82" width="60" height="3" rx="1.5" fill="#B8B0A6" />
-    ${face(60, 66)}`,
-  cardboard: `
-    <rect x="20" y="40" width="80" height="56" rx="4" fill="#E0B87A" stroke="${BROWN}" stroke-width="3" />
-    <path d="M20 40 L40 24 H100 L80 40 Z" fill="#C99A5B" stroke="${BROWN}" stroke-width="3" stroke-linejoin="round" />
-    <path d="M60 40 V96" stroke="${BROWN}" stroke-width="2" stroke-dasharray="4 4" />
-    ${face(60, 66)}`,
-  can: `
-    <rect x="36" y="24" width="48" height="76" rx="10" fill="#58C78E" stroke="${BROWN}" stroke-width="3" />
-    <ellipse cx="60" cy="24" rx="24" ry="7" fill="#DDD" stroke="${BROWN}" stroke-width="3" />
-    <ellipse cx="60" cy="24" rx="8" ry="2.5" fill="${BROWN}" />
-    <rect x="44" y="40" width="32" height="8" rx="4" fill="#FFD85A" />
-    ${face(60, 70)}`,
-  bottle: `
-    <rect x="50" y="14" width="20" height="12" rx="3" fill="#FFD85A" stroke="${BROWN}" stroke-width="3" />
-    <path d="M50 26 V36 Q38 44 38 56 V96 Q38 102 44 102 H76 Q82 102 82 96 V56 Q82 44 70 36 V26 Z" fill="#B8E4FF" stroke="${BROWN}" stroke-width="3" stroke-linejoin="round" />
-    <rect x="46" y="60" width="28" height="18" rx="4" fill="#FFFDF7" opacity="0.8" />
-    ${face(60, 72)}`,
-  clothes: `
-    <path d="M40 26 L52 20 Q60 28 68 20 L80 26 L96 42 L84 52 L84 96 H36 V52 L24 42 Z" fill="#FF9FB2" stroke="${BROWN}" stroke-width="3" stroke-linejoin="round" />
-    <circle cx="60" cy="50" r="6" fill="#FFFDF7" />
-    ${face(60, 70)}`,
-}
-const item = (name, size) => `<svg viewBox="0 0 120 120" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">${items[name]}</svg>`
+/** 資源のイラスト（いらすとや、public/images/items/<key>.png）を data URI で埋め込む */
+const itemData = async (key) => `data:image/png;base64,${(await readFile(`${root}public/images/items/${key}.png`)).toString('base64')}`
+const item = async (key, size) => `<img src="${await itemData(key)}" width="${size}" height="${size}" alt="" style="object-fit:contain" />`
 
 /** 黄色い旗 */
 const flag = `
@@ -110,11 +75,11 @@ const html = `<!doctype html>
     <p class="lead">あつめて、わけて、学校をハッピーに！</p>
   </div>
   <div class="items">
-    <div class="item">${item('newspaper', 120)}<span>新聞</span></div>
-    <div class="item">${item('cardboard', 120)}<span>ダンボール</span></div>
-    <div class="item">${item('can', 120)}<span>空き缶</span></div>
-    <div class="item">${item('bottle', 120)}<span>空きビン</span></div>
-    <div class="item">${item('clothes', 120)}<span>古着</span></div>
+    <div class="item">${await item('newspaper', 110)}<span>新聞</span></div>
+    <div class="item">${await item('cardboard', 110)}<span>ダンボール</span></div>
+    <div class="item">${await item('can', 110)}<span>空き缶</span></div>
+    <div class="item">${await item('bottle', 110)}<span>空きビン</span></div>
+    <div class="item">${await item('clothes', 110)}<span>古着</span></div>
   </div>
   <div class="mascot">${mascot}</div>
   <div class="flag">${flag}</div>

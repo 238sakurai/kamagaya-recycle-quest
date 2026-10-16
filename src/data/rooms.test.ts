@@ -71,7 +71,8 @@ describe('おへやで有価物さがしの部屋データ', () => {
         if ('oil-heater' in byId) expect(byId['oil-heater']).toBe(false)
         if ('gas-cylinder' in byId) expect(byId['gas-cylinder']).toBe(false)
         if ('tire' in byId) expect(byId.tire).toBe(false)
-        if ('bike-battery' in byId) expect(byId['bike-battery']).toBe(false)
+        if ('battery' in byId) expect(byId.battery).toBe(false)
+        if ('metal-kettle' in byId) expect(byId['metal-kettle']).toBe(true)
       })
     })
   }

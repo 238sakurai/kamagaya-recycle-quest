@@ -2,7 +2,7 @@ import type { KeyboardEvent } from 'react'
 import { OBJECT_HIT_RADIUS, ROOM_HEIGHT, ROOM_WIDTH, type Room, type RoomObject } from '../data/rooms'
 import { stripFurigana } from '../lib/furigana'
 import type { RoomResult } from '../lib/roomJudge'
-import { ItemShape } from './ItemArt'
+import { itemImagePath } from '../data/illustrations'
 
 interface RoomSceneProps {
   room: Room
@@ -30,7 +30,7 @@ export function RoomScene({ room, marked, result, onTap, animate }: RoomScenePro
       {room.scene === 'kids' ? <KidsRoom /> : room.scene === 'living' ? <LivingRoom /> : room.scene === 'entrance' ? <Entrance /> : <Storage />}
 
       {room.objects.map((o) => {
-        const scale = o.scale ?? 0.55
+        const size = 120 * (o.scale ?? 0.6)
         const isMarked = marked.has(o.id)
         const status = statusOf(o)
         const label = `${stripFurigana(o.name)}${isMarked ? '（丸をつけた）' : ''}`
@@ -57,11 +57,16 @@ export function RoomScene({ room, marked, result, onTap, animate }: RoomScenePro
             onKeyDown={onKeyDown}
           >
             <circle r={OBJECT_HIT_RADIUS} fill="transparent" />
-            <g transform={`translate(${-60 * scale} ${-60 * scale}) scale(${scale})`}>
-              <ItemShape art={o.art} />
-            </g>
+            <image
+              href={`${import.meta.env.BASE_URL}${itemImagePath(o.art)}`}
+              x={-size / 2}
+              y={-size / 2}
+              width={size}
+              height={size}
+              preserveAspectRatio="xMidYMid meet"
+            />
             <text
-              y={60 * scale + 13}
+              y={size / 2 + 13}
               textAnchor="middle"
               fontSize={o.label.length >= 8 ? 10 : 11.5}
               fontWeight="700"
